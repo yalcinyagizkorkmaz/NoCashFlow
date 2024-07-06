@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { WechatOutlined} from '@ant-design/icons';
+
+import logoImage from '../Png/no (3).png'; 
 
 
 
@@ -24,8 +25,8 @@ const App = () => (
     padding: '20px' 
   }}>
    <h1 style={{ marginBottom: '25px', display: 'flex', alignItems: 'center' }}>
-      NOCASHFLOW
-      <WechatOutlined style={{ marginLeft: '10px' }} />
+     NOCASH FLOW
+      <img src={logoImage}  style={{ height: '40px', borderRadius: '50%',marginLeft: '10px'}} />
     </h1>
 
 
