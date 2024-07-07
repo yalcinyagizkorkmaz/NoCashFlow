@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Select, Input } from 'antd';
 
 const { Option } = Select;
 
 const App = () => {
+  const [form] = Form.useForm();
+  const [topicOptions, setTopicOptions] = useState([]);
+
   const onFinish = (values) => {
     console.log('Success:', values);
     // Burada formun gönderim işlemleri veya istenilen diğer işlemler yapılabilir.
@@ -11,6 +14,41 @@ const App = () => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
+  };
+
+  const handleMainTopicChange = (value) => {
+    switch (value) {
+      case 'dijital-bankacilik':
+        setTopicOptions(['Mobil Deniz', 'ATM', 'İnternet Bankacılığı']);
+        form.setFieldsValue({ topic: undefined });
+        break;
+        case 'kartlar':
+          setTopicOptions(['Bireysel Kredi Kartlar', 'Debit Kartlar']);
+          form.setFieldsValue({ topic: undefined });
+          break;
+          case 'yatirim-urunleri':
+            setTopicOptions(['Yatırım İşlemleri']);
+            form.setFieldsValue({ topic: undefined });
+            break;
+              case 'mevduat':
+                setTopicOptions(['Para Transferi','Vadeli Mevduat']);
+                form.setFieldsValue({ topic: undefined });
+                break;
+                case 'fraud-yonetimi':
+                  setTopicOptions(['Hesap/Kart Bloke Kaldırma','EFT/Havale Teyit','Dolandırıcılık/Bilgisi Dışında Şüpheli Kart İşlemleri','Bilgi-Belge Sahteciliği/Kayıp']);
+                  form.setFieldsValue({ topic: undefined });
+                  break;
+                  case 'sigorta':
+                    setTopicOptions(['Konut Sigortası','Bireysel Kredi Hayat Sigortası','Ferdi Kaza Sigortası']);
+                    form.setFieldsValue({ topic: undefined });
+                    break;
+                    case 'hizmet-kalitesi':
+                      setTopicOptions(['İletişim Merkezi']);
+                      form.setFieldsValue({ topic: undefined });
+                      break;
+      
+       
+    }
   };
 
   return (
@@ -42,6 +80,7 @@ const App = () => {
         }}
       >
         <Form
+          form={form}
           name="message_form"
           style={{ width: '100%', maxWidth: '600px' }}
           labelCol={{
@@ -87,11 +126,14 @@ const App = () => {
               },
             ]}
           >
-            <Select placeholder="Ana Konu Seçin">
-              <Option value="bankacılık">Bankacılık</Option>
-              <Option value="finans">Finans</Option>
-              <Option value="sigortacılık">Sigortacılık</Option>
-              <Option value="kredi">Kredi</Option>
+            <Select placeholder="Ana Konu Seçin" onChange={handleMainTopicChange}>
+              <Option value="dijital-bankacilik">Dijital Bankacılık</Option>
+              <Option value="kartlar">Kartlar</Option>
+              <Option value="yatirim-urunleri">Yatırım Ürünleri</Option>
+              <Option value="mevduat">Mevduat</Option>
+              <Option value="fraud-yonetimi">Fraud Yönetimi</Option>
+              <Option value="sigorta">Sigorta</Option>
+              <Option value="hizmet-kalitesi">Hizmet Kalitesi</Option>
             </Select>
           </Form.Item>
 
@@ -106,28 +148,9 @@ const App = () => {
             ]}
           >
             <Select placeholder="Konu Seçin">
-              <Option value="mobil bankacılık">Mobil Bankacılık</Option>
-              <Option value="yatırım ürünleri">Yatırım Ürünleri</Option>
-              <Option value="mevduatlar">Mevduatlar</Option>
-              <Option value="çevrimiçi işlemler">Çevrimiçi İşlemler</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Alt Konu"
-            name="subTopic"
-            rules={[
-              {
-                required: true,
-                message: 'Lütfen alt konuyu belirtiniz!',
-              },
-            ]}
-          >
-            <Select placeholder="Alt Konu Seçin">
-              <Option value="kart işlemleri">Kart İşlemleri</Option>
-              <Option value="şifre işlemleri">Şifre İşlemleri</Option>
-              <Option value="havale ve EFT">Havale ve EFT</Option>
-              <Option value="müşteri hizmetleri">Müşteri Hizmetleri</Option>
+              {topicOptions.map((option) => (
+                <Option key={option} value={option}>{option}</Option>
+              ))}
             </Select>
           </Form.Item>
 
