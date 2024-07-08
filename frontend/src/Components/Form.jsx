@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import logoImage from '../Png/no (3).png';
 import SikayetPage from './SikayetPage';
 
@@ -37,7 +36,7 @@ const App = () => {
               alignItems: 'center',
             }}
           >
-            NOCASH FLOW
+           İLETİŞİM BİLGİLERİ
             <img
               src={logoImage}
               style={{ height: '40px', borderRadius: '50%', marginLeft: '10px' }}
@@ -78,12 +77,12 @@ const App = () => {
               autoComplete="off"
             >
               <Form.Item
-                label="Username"
-                name="username"
+                label="İsim"
+                name="firstName"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Lütfen isminizi girin!',
                   },
                 ]}
               >
@@ -91,27 +90,50 @@ const App = () => {
               </Form.Item>
 
               <Form.Item
-                label="Password"
-                name="password"
+                label="Soyisim"
+                name="lastName"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your password!',
+                    message: 'Lütfen soyisminizi girin!',
                   },
                 ]}
               >
-                <Input.Password />
+                <Input />
               </Form.Item>
 
               <Form.Item
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{
-                  offset: 6,
-                  span: 18,
-                }}
+                label="TC Kimlik No"
+                name="tcNumber"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen TC kimlik numaranızı girin!',
+                  },
+                  {
+                    pattern: /^[0-9]{11}$/,
+                    message: 'TC kimlik numarası 11 haneli olmalıdır!',
+                  },
+                ]}
               >
-                <Checkbox>Remember me</Checkbox>
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Telefon Numarası"
+                name="phoneNumber"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen telefon numaranızı girin!',
+                  },
+                  {
+                    pattern: /^[0-9]{10}$/,
+                    message: 'Telefon numarası 10 haneli olmalıdır!',
+                  },
+                ]}
+              >
+                <Input />
               </Form.Item>
 
               <Form.Item
@@ -127,15 +149,11 @@ const App = () => {
             </Form>
           </div>
         </>
-      ) : ( // Render SuccessPage component if formSubmitted is true
+      ) : ( // Render SikayetPage component if formSubmitted is true
         <SikayetPage />
       )}
     </div>
   );
 };
 
-
-
 export default App;
-
-
