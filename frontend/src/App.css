@@ -1,6 +1,34 @@
 .App {
   text-align: center;
 }
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
+.font-semi-bold {
+  font-weight: 600;
+}
+
+
+.app-container {
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  overflow: hidden;
+}
+
+
+.app-container {
+  height: 50vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+}
+
 
 .App-logo {
   height: 40vmin;
@@ -37,3 +65,378 @@
   }
 }
 
+
+body {
+  margin: 0; line-height: normal;
+  }
+
+  .eamilIdChild {
+  	position: absolute;
+  	top: calc(50% - 11.61px);
+  	left: calc(50% - 209px);
+  	border-radius: 8.08px;
+  	background-color: #fff;
+  	width: 418px;
+  	height: 69.7px;
+}
+.adnz {
+  	position: absolute;
+  	top: calc(50% - 58.1px);
+  	left: calc(50% - 209px);
+  	display: inline-block;
+  	width: 130.5px;
+  	height: 32.8px;
+}
+.ltfenAdnzGirin {
+  	position: absolute;
+  	top: calc(50% + 8.17px);
+  	left: calc(50% - 180.95px);
+  	font-size: 14.14px;
+  	color: #000;
+  	display: inline-block;
+  	width: 170.8px;
+  	height: 28.7px;
+}
+.eamilId {
+  	position: absolute;
+  	top: calc(50% - 138.46px);
+  	left: calc(50% - 434.5px);
+  	width: 418px;
+  	height: 116.2px;
+}
+.ltfen11Haneli {
+  	position: absolute;
+  	top: calc(50% + 7.9px);
+  	left: calc(50% - 181px);
+  	font-size: 14.14px;
+  	color: #000;
+  	display: inline-block;
+  	width: 225px;
+  	height: 29px;
+}
+.eamilId1 {
+  	position: absolute;
+  	top: calc(50% + 22.4px);
+  	left: calc(50% + 16.5px);
+  	width: 418px;
+  	height: 116.2px;
+}
+.eamilId2 {
+  	position: absolute;
+  	top: calc(50% - 138.6px);
+  	left: calc(50% + 16.5px);
+  	width: 418px;
+  	height: 116.2px;
+}
+.ltfenTelefonNumaranz {
+  	position: absolute;
+  	top: calc(50% + 7.9px);
+  	left: calc(50% - 181px);
+  	font-size: 14.14px;
+  	color: #000;
+  	display: inline-block;
+  	width: 232px;
+  	height: 29px;
+}
+.eamilId3 {
+  	position: absolute;
+  	top: calc(50% + 22.4px);
+  	left: calc(50% - 434.5px);
+  	width: 418px;
+  	height: 116.2px;
+}
+.eamilIdParent {
+  	width: 869px;
+  	position: relative;
+  	height: 277.2px;
+}
+
+
+
+
+
+
+
+
+
+.groupParent {
+  	position: absolute;
+  	top: 418px;
+  	left: 220px;
+  	border-radius: 20px 20px 0px 0px;
+  	background-color: #0033a0;
+  	width: 1000px;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: center;
+  	justify-content: center;
+  	padding: 74px 65px;
+  	box-sizing: border-box;
+  	gap: 35px;
+  	text-align: left;
+}
+
+.ltfenBilgileriniziGiriniz {
+  	position: absolute;
+  	top: 270px;
+  	left: 89px;
+  	font-weight: 600;
+  	display: inline-block;
+  	width: 483px;
+  	height: 43px;
+}
+.dummyLogo {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 662px;
+  	height: 270px;
+}
+.ltfenBilgileriniziGirinizParent {
+  	position: absolute;
+  	top: 0px;
+  	left: 7px;
+  	width: 662px;
+  	height: 313px;
+}
+.mavi1Icon {
+  	position: absolute;
+  	top: 119px;
+  	left: 0px;
+  	width: 675px;
+  	height: 151px;
+  	object-fit: cover;
+}
+.groupContainer {
+  	position: absolute;
+  	top: 43px;
+  	left: 382px;
+  	width: 675px;
+  	height: 313px;
+  	font-size: 30px;
+  	color: #555;
+}
+.kullancBilgileriBa {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 1024px;
+  	overflow: hidden;
+  	text-align: center;
+  	font-size: 20px;
+  	color: #fff;
+  	font-family: 'Open Sans';
+}
+.eamilIdChild {
+  position: absolute;
+  top: calc(50% - 11.61px);
+  left: calc(50% - 209px);
+  border-radius: 8.08px;
+  background-color: #fff;
+  width: 418px;
+  height: 69.7px;
+}
+.adnz {
+  position: absolute;
+  top: calc(50% - 58.1px);
+  left: calc(50% - 209px);
+  display: inline-block;
+  width: 130.5px;
+  height: 32.8px;
+}
+.ltfenAdnzGirin {
+  position: absolute;
+  top: calc(50% + 8.17px);
+  left: calc(50% - 180.95px);
+  font-size: 14.14px;
+  color: #000;
+  display: inline-block;
+  width: 170.8px;
+  height: 28.7px;
+}
+.eamilId {
+  position: absolute;
+  top: calc(50% - 138.46px);
+  left: calc(50% - 434.5px);
+  width: 418px;
+  height: 116.2px;
+}
+.ltfen11Haneli {
+  position: absolute;
+  top: calc(50% + 7.9px);
+  left: calc(50% - 181px);
+  font-size: 14.14px;
+  color: #000;
+  display: inline-block;
+  width: 225px;
+  height: 29px;
+}
+.eamilId1 {
+  position: absolute;
+  top: calc(50% + 22.4px);
+  left: calc(50% + 16.5px);
+  width: 418px;
+  height: 116.2px;
+}
+.eamilId2 {
+  position: absolute;
+  top: calc(50% - 138.6px);
+  left: calc(50% + 16.5px);
+  width: 418px;
+  height: 116.2px;
+}
+.ltfenTelefonNumaranz {
+  position: absolute;
+  top: calc(50% + 7.9px);
+  left: calc(50% - 181px);
+  font-size: 14.14px;
+  color: #000;
+  display: inline-block;
+  width: 232px;
+  height: 29px;
+}
+.eamilId3 {
+  position: absolute;
+  top: calc(50% + 22.4px);
+  left: calc(50% - 434.5px);
+  width: 418px;
+  height: 116.2px;
+}
+.eamilIdParent {
+  width: 869px;
+  position: relative;
+  height: 277.2px;
+}
+
+
+
+
+
+
+.ikayetOlutur {
+  position: relative;
+  line-height: 22px;
+  font-weight: 600;
+}
+.button {
+  width: 100%; /* Ensure the button takes the full width of its container */
+  padding: 10px; /* Add some padding */
+  background-color: #007BFF; /* Add a background color */
+  color: #fff; /* Ensure the text is visible */
+  border: none; /* Remove any borders */
+  cursor: pointer; /* Change the cursor to a pointer */
+  text-align: center; /* Center the text */
+}
+
+.ikayetOlutur {
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.groupParent {
+  position: absolute;
+  top: 418px;
+  left: 220px;
+  border-radius: 20px 20px 0px 0px;
+  background-color: #0033a0;
+  width: 1000px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 74px 65px;
+  box-sizing: border-box;
+  gap: 35px;
+  text-align: left;
+}
+
+.ltfenBilgileriniziGiriniz {
+  position: absolute;
+  top: 270px;
+  left: 89px;
+  font-weight: 600;
+  display: inline-block;
+  width: 483px;
+  height: 43px;
+}
+.dummyLogo {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 662px;
+  height: 270px;
+}
+.ltfenBilgileriniziGirinizParent {
+  position: absolute;
+  top: 0px;
+  left: 7px;
+  width: 662px;
+  height: 313px;
+}
+.mavi1Icon {
+  position: absolute;
+  top: 119px;
+  left: 0px;
+  width: 675px;
+  height: 151px;
+  object-fit: cover;
+}
+.groupContainer {
+  position: absolute;
+  top: 43px;
+  left: 382px;
+  width: 675px;
+  height: 313px;
+  font-size: 30px;
+  color: #555;
+}
+.kullancBilgileriBa {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  height: 1024px;
+  overflow: hidden;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Open Sans';
+}
+
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
+.beyaz1Icon {
+  width: 100%;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  height: 172px;
+  object-fit: cover;
+  }
+  .imdiDenizbanknYapay {
+    width: 739px;
+    position: relative;
+    font-size: 30px;
+    line-height: 35px;
+    font-family: 'Open Sans';
+    color: #fff;
+    text-align: left;
+    display: inline-block;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+    .karlamaBa {
+      width: 100%;
+      position: relative;
+      background-color: #fff;
+      height: 1024px;
+      overflow: hidden;
+      text-align: left;
+      font-size: 60px;
+      color: #fff;
+      font-family: 'Open Sans';
+      }

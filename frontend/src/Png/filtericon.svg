@@ -1,0 +1,9 @@
+<svg width="100" height="71" viewBox="0 0 52 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Filter icon">
+<path id="Line" opacity="0.686151" d="M50.6119 60.092V1" stroke="white" stroke-width="0.2" stroke-linecap="square"/>
+<g id="filter">
+<path id="Oval" fill-rule="evenodd" clip-rule="evenodd" d="M12.0265 28.6466C18.0489 28.6466 22.9311 26.9458 22.9311 24.8478C22.9311 22.7498 18.0489 21.0491 12.0265 21.0491C6.004 21.0491 1.12183 22.7498 1.12183 24.8478C1.12183 26.9458 6.004 28.6466 12.0265 28.6466Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path" d="M1.12183 24.8479C1.12466 28.6597 4.59581 31.971 9.51001 32.8498V38.1436C9.51001 39.1926 10.6367 40.043 12.0265 40.043C13.4163 40.043 14.5429 39.1926 14.5429 38.1436V32.8498C19.4571 31.971 22.9283 28.6597 22.9311 24.8479" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>

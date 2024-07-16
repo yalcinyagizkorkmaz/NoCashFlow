@@ -1,0 +1,144 @@
+.eamilIdChild {
+    position: absolute;
+    top: calc(50% - 11.61px);
+    left: calc(50% - 265.77px);
+    border-radius: 8.08px;
+    background-color: #fff;
+    width: 531.8px;
+    height: 69.7px;
+}
+.denizbankKullancAdnz {
+    position: absolute;
+    top: calc(50% - 58.1px);
+    left: calc(50% - 266px);
+    display: inline-block;
+    width: 260px;
+    height: 33px;
+}
+.ltfenKullancAdnz {
+    position: absolute;
+    top: calc(50% + 8.9px);
+    left: calc(50% - 238px);
+    font-size: 14.14px;
+    color: #000;
+    display: inline-block;
+    width: 217.3px;
+    height: 28.7px;
+}
+.eamilId {
+    position: absolute;
+    top: calc(50% - 138.5px);
+    left: calc(50% - 266px);
+    width: 532px;
+    height: 116.2px;
+}
+.eamilIdItem {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: calc(50% - 266px);
+    border-radius: 8.08px;
+    background-color: #fff;
+    width: 532px;
+    height: 70px;
+}
+.denizbankIfreniz {
+    position: absolute;
+    top: calc(50% - 58px);
+    left: calc(50% - 266px);
+    display: inline-block;
+    width: 213px;
+    height: 33px;
+}
+.ltfenIfreniziGirin {
+    position: absolute;
+    top: calc(50% + 7.86px);
+    left: calc(50% - 238px);
+    font-size: 14.14px;
+    color: #000;
+    display: inline-block;
+    width: 232px;
+    height: 29px;
+}
+.eamilId1 {
+    position: absolute;
+    top: calc(50% + 22.5px);
+    left: calc(50% - 266px);
+    width: 532px;
+    height: 116px;
+}
+.eamilIdParent {
+    width: 532px;
+    position: relative;
+    height: 277px;
+}
+.giriYap {
+    position: relative;
+    line-height: 22px;
+    font-weight: 600;
+}
+.button {
+    width: 283px;
+    box-shadow: 0px 13px 37px rgba(0, 0, 0, 0.21);
+    border-radius: 10px;
+    background-color: #fff;
+    height: 68px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    text-align: center;
+    font-size: 25px;
+    color: #ce0538;
+}
+.groupParent {
+    position: absolute;
+    top: 418px;
+    left: 220px;
+    border-radius: 20px 20px 0px 0px;
+    background-color: #ce0538;
+    width: 1000px;
+    height: 636px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 74px 65px;
+    box-sizing: border-box;
+    gap: 68px;
+}
+.ltfenPersonelBilgilerinizi {
+    position: absolute;
+    top: 323px;
+    left: 434px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #555;
+    text-align: center;
+    display: inline-block;
+    width: 572px;
+    height: 43px;
+}
+.mavi1Icon {
+    position: absolute;
+    top: 172px;
+    left: 382px;
+    width: 675px;
+    height: 151px;
+    object-fit: cover;
+}
+.adminGiriBa {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 1024px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 20px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+

@@ -1,0 +1,1362 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;700;800&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
+.kYap {
+    position: relative;
+    line-height: 22px;
+    font-weight: 600;
+}
+.button {
+    position: absolute;
+    top: 29px;
+    left: 1243px;
+    box-shadow: 0px 13px 37px rgba(0, 0, 0, 0.21);
+    border-radius: 10px;
+    background-color: #fff;
+    width: 177px;
+    height: 43px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.burakBerkAydn {
+    position: absolute;
+    top: calc(50% - 26.5px);
+    left: calc(50% + 220px);
+    line-height: 22px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 272px;
+    height: 53px;
+}
+.buttonParent {
+    width: 100%;
+    position: relative;
+    border-radius: 0px 0px 20px 20px;
+    background-color: #ce0538;
+    height: 101px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 25px;
+    color: #ce0538;
+    font-family: 'Open Sans';
+}
+
+
+
+.divider {
+    width: 2px;
+    flex: 1;
+    position: relative;
+    border-right: 2px solid #cac4d0;
+    box-sizing: border-box;
+}
+.verticalinset {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 35px;
+    height: 101px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 0px;
+    box-sizing: border-box;
+}
+.verticalinsetWrapper {
+    position: absolute;
+    top: 0px;
+    left: 866px;
+    width: 35px;
+    height: 101px;
+}
+.beyaz2Icon {
+    position: absolute;
+    top: 21px;
+    left: 45px;
+    width: 251px;
+    height: 58px;
+    object-fit: cover;
+}
+.header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1440px;
+    height: 101px;
+    text-align: center;
+    font-size: 25px;
+}
+.ikayetler {
+    position: absolute;
+    top: 117px;
+    left: 43px;
+    font-size: 40px;
+    line-height: 22px;
+    font-weight: 600;
+    color: #000;
+    display: inline-block;
+    width: 332px;
+    height: 50px;
+}
+.bg {
+    position: absolute;
+    height: 96.57%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 3.43%;
+    left: 0%;
+    border-radius: 10px;
+    background-color: #ce0538;
+    border: 0.6px solid #fff;
+    box-sizing: border-box;
+}
+.icReplay24pxIcon {
+    position: absolute;
+    height: 95%;
+    width: 14.01%;
+    top: 5.28%;
+    right: 85.99%;
+    bottom: -0.28%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.resetFilter1 {
+    position: absolute;
+    width: 79.44%;
+    top: calc(50% - 8px);
+    left: 20.59%;
+    font-weight: 600;
+    display: inline-block;
+    height: 15.8px;
+}
+.resetFilter {
+    position: absolute;
+    height: 26.14%;
+    width: 27.81%;
+    top: 39.22%;
+    right: 4.75%;
+    bottom: 34.64%;
+    left: 67.44%;
+}
+.lineIcon {
+    position: absolute;
+    height: 100%;
+    width: 0.71%;
+    top: 0%;
+    right: 0.03%;
+    bottom: 0%;
+    left: 99.26%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.69;
+    mix-blend-mode: normal;
+}
+.icKeyboardArrowDown48pxIcon {
+    position: absolute;
+    height: 34.35%;
+    width: 17.38%;
+    top: 33.03%;
+    right: 18.12%;
+    bottom: 32.62%;
+    left: 64.5%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.orderType {
+    position: absolute;
+    width: 52.14%;
+    top: calc(50% - 7.39px);
+    left: 0%;
+    display: inline-block;
+    height: 16px;
+}
+.type {
+    position: absolute;
+    height: 96.57%;
+    width: 24.42%;
+    top: 3.45%;
+    right: 36.52%;
+    bottom: -0.02%;
+    left: 39.06%;
+}
+.lineIcon1 {
+    position: absolute;
+    height: 100%;
+    width: 1.01%;
+    top: 0%;
+    right: -0.02%;
+    bottom: 0%;
+    left: 99.01%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.69;
+    mix-blend-mode: normal;
+}
+.icKeyboardArrowDown48pxIcon1 {
+    position: absolute;
+    height: 34.35%;
+    width: 24.66%;
+    top: 33.03%;
+    right: 25.73%;
+    bottom: 32.62%;
+    left: 49.62%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.date1 {
+    position: absolute;
+    width: 43.33%;
+    top: calc(50% - 6.34px);
+    left: 0%;
+    display: inline-block;
+    height: 15.8px;
+}
+.date {
+    position: absolute;
+    height: 96.57%;
+    width: 21.07%;
+    top: 0%;
+    right: 62.57%;
+    bottom: 3.43%;
+    left: 16.36%;
+}
+.lineIcon2 {
+    position: absolute;
+    height: 100%;
+    width: 2.2%;
+    top: 0%;
+    right: -0.06%;
+    bottom: 0%;
+    left: 97.86%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.69;
+    mix-blend-mode: normal;
+}
+.filterIcon1 {
+    position: absolute;
+    height: 32.15%;
+    width: 43.6%;
+    top: 33.92%;
+    right: 56.4%;
+    bottom: 33.93%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.filterIcon {
+    position: absolute;
+    height: 96.57%;
+    width: 9.69%;
+    top: 0%;
+    right: 85.05%;
+    bottom: 3.43%;
+    left: 5.26%;
+}
+.filter {
+    position: absolute;
+    height: 5.98%;
+    width: 35.83%;
+    top: 16.31%;
+    right: 61.18%;
+    bottom: 77.71%;
+    left: 2.99%;
+    color: #fff;
+    font-family: 'Nunito Sans';
+}
+.indicatorIcon {
+    position: absolute;
+    height: 2.93%;
+    width: 5.97%;
+    top: 95.12%;
+    right: 4.51%;
+    bottom: 1.95%;
+    left: 89.51%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.bg1 {
+    position: absolute;
+    height: 99.19%;
+    width: 100%;
+    top: 0.82%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 14px;
+    background-color: #fff;
+    border: 0.3px solid #b9b9b9;
+    box-sizing: border-box;
+}
+.div {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% + 304.3px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div1 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% + 231.3px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div2 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% + 159.3px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div3 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% + 86.3px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div4 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% + 14.3px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.rectangle {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 4.5px;
+    background-color: #00b69b;
+    opacity: 0.2;
+    mix-blend-mode: normal;
+}
+.completed {
+    position: absolute;
+    top: calc(50% - 7.9px);
+    left: 24.64%;
+}
+.labelCompleted1 {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+}
+.labelCompleted {
+    position: absolute;
+    height: 52.02%;
+    width: 7.18%;
+    top: 0%;
+    right: 8.02%;
+    bottom: 47.98%;
+    left: 84.8%;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #00b69b;
+}
+.div6 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% - 21.46px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.child {
+    position: absolute;
+    height: 2.02%;
+    width: 100%;
+    top: 98.12%;
+    right: 0%;
+    bottom: -0.13%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.6;
+    mix-blend-mode: normal;
+}
+.christineBrooks {
+    position: absolute;
+    width: 8.1%;
+    top: calc(50% - 20.98px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.kutchGreenApt {
+    position: absolute;
+    width: 12.88%;
+    top: calc(50% - 20.98px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.sep2019 {
+    position: absolute;
+    width: 6.41%;
+    top: calc(50% - 20.98px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.electric {
+    position: absolute;
+    width: 3.62%;
+    top: calc(50% - 20.98px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.button1 {
+    position: absolute;
+    top: 0.34px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.div5 {
+    position: absolute;
+    height: 7.09%;
+    width: 100%;
+    top: 9.96%;
+    right: 0%;
+    bottom: 82.95%;
+    left: 0%;
+}
+.rectangle1 {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 4.5px;
+    background-color: #6226ef;
+    opacity: 0.2;
+    mix-blend-mode: normal;
+}
+.processing {
+    position: absolute;
+    top: calc(50% - 7.9px);
+    left: 19.33%;
+}
+.labelProcessing {
+    position: absolute;
+    height: 52.02%;
+    width: 7.18%;
+    top: 0%;
+    right: 8.02%;
+    bottom: 47.98%;
+    left: 84.8%;
+    text-align: center;
+    font-size: 12px;
+    color: #6226ef;
+}
+.div9 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% - 20.98px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.rosiePearson {
+    position: absolute;
+    width: 7.03%;
+    top: calc(50% - 20.98px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.immanuelFerryS {
+    position: absolute;
+    width: 14.89%;
+    top: calc(50% - 20.98px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.may2019 {
+    position: absolute;
+    width: 6.56%;
+    top: calc(50% - 20.98px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.book {
+    position: absolute;
+    width: 2.55%;
+    top: calc(50% - 20.98px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div8 {
+    position: absolute;
+    height: 7.09%;
+    width: 100%;
+    top: 20.33%;
+    right: 0%;
+    bottom: 72.58%;
+    left: 0%;
+}
+.rectangle2 {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 4.5px;
+    background-color: #ef3826;
+    opacity: 0.2;
+    mix-blend-mode: normal;
+}
+.rejected {
+    position: absolute;
+    top: calc(50% - 7.9px);
+    left: 19.41%;
+}
+.labelRejected {
+    position: absolute;
+    height: 5.6%;
+    width: 7.18%;
+    top: 0%;
+    right: 8.02%;
+    bottom: 94.4%;
+    left: 84.8%;
+    text-align: center;
+    font-size: 12px;
+    color: #ef3826;
+}
+.labelRejected2 {
+    position: absolute;
+    height: 5.6%;
+    width: 7.18%;
+    top: 94.4%;
+    right: 8%;
+    bottom: 0%;
+    left: 84.82%;
+    text-align: center;
+    font-size: 12px;
+    color: #ef3826;
+}
+.inner {
+    position: absolute;
+    height: 0.22%;
+    width: 100%;
+    top: 10.55%;
+    right: 0%;
+    bottom: 89.23%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.6;
+    mix-blend-mode: normal;
+}
+.darrellCaldwell {
+    position: absolute;
+    width: 7.8%;
+    top: calc(50% - 226.73px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.fridaPorts {
+    position: absolute;
+    width: 8.34%;
+    top: calc(50% - 226.73px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.nov2019 {
+    position: absolute;
+    width: 6.48%;
+    top: calc(50% - 226.73px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.medicine {
+    position: absolute;
+    width: 4.4%;
+    top: calc(50% - 226.73px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div11 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% - 226.25px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div10 {
+    position: absolute;
+    height: 65.93%;
+    width: 100%;
+    top: 30.7%;
+    right: 0%;
+    bottom: 3.37%;
+    left: 0%;
+}
+.labelCompleted2 {
+    position: absolute;
+    height: 52.02%;
+    width: 7.18%;
+    top: 0%;
+    right: 7.87%;
+    bottom: 47.98%;
+    left: 84.95%;
+    text-align: center;
+    font-size: 12px;
+    color: #00b69b;
+}
+.gilbertJohnston {
+    position: absolute;
+    width: 8.02%;
+    top: calc(50% - 20.98px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.destinyLakeSui {
+    position: absolute;
+    width: 13.58%;
+    top: calc(50% - 20.98px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.feb2019 {
+    position: absolute;
+    width: 6.32%;
+    top: calc(50% - 20.98px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.mobile {
+    position: absolute;
+    width: 3.32%;
+    top: calc(50% - 20.98px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div12 {
+    position: absolute;
+    height: 7.09%;
+    width: 100%;
+    top: 41.07%;
+    right: 0%;
+    bottom: 51.84%;
+    left: 0%;
+}
+.alanCain {
+    position: absolute;
+    width: 7.78%;
+    top: calc(50% - 20.54px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.myleneThroughwa {
+    position: absolute;
+    width: 12.27%;
+    top: calc(50% - 20.98px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.jul2019 {
+    position: absolute;
+    width: 5.71%;
+    top: calc(50% - 20.98px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.watch {
+    position: absolute;
+    width: 3.24%;
+    top: calc(50% - 20.98px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div13 {
+    position: absolute;
+    height: 7.09%;
+    width: 100%;
+    top: 51.44%;
+    right: 0%;
+    bottom: 41.47%;
+    left: 0%;
+}
+.labelCompleted4 {
+    position: absolute;
+    height: 15.13%;
+    width: 7.18%;
+    top: 0%;
+    right: 8.02%;
+    bottom: 84.87%;
+    left: 84.8%;
+    text-align: center;
+    font-size: 12px;
+    color: #00b69b;
+}
+.labelCompleted6 {
+    position: absolute;
+    height: 15.13%;
+    width: 7.18%;
+    top: 84.89%;
+    right: 8%;
+    bottom: -0.02%;
+    left: 84.82%;
+    text-align: center;
+    font-size: 12px;
+    color: #00b69b;
+}
+.child3 {
+    position: absolute;
+    height: 0.59%;
+    width: 100%;
+    top: 28.54%;
+    right: 0%;
+    bottom: 70.87%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.6;
+    mix-blend-mode: normal;
+}
+.alfredMurray {
+    position: absolute;
+    width: 7.78%;
+    top: calc(50% - 81.52px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.weimannMountain {
+    position: absolute;
+    width: 11.88%;
+    top: calc(50% - 81.43px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.aug2019 {
+    position: absolute;
+    width: 6.56%;
+    top: calc(50% - 81.43px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.medicine1 {
+    position: absolute;
+    width: 4.4%;
+    top: calc(50% - 81.43px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div14 {
+    position: absolute;
+    height: 24.38%;
+    width: 100%;
+    top: 61.81%;
+    right: 0%;
+    bottom: 13.82%;
+    left: 0%;
+}
+.maggieSullivan {
+    position: absolute;
+    width: 8.09%;
+    top: calc(50% - 20.59px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.newScottieberg {
+    position: absolute;
+    width: 8.25%;
+    top: calc(50% - 20.98px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div15 {
+    position: absolute;
+    height: 7.09%;
+    width: 100%;
+    top: 72.17%;
+    right: 0%;
+    bottom: 20.73%;
+    left: 0%;
+}
+.child5 {
+    position: absolute;
+    height: 2.18%;
+    width: 100%;
+    top: 97.98%;
+    right: 0%;
+    bottom: -0.16%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    opacity: 0.6;
+    mix-blend-mode: normal;
+}
+.rosieTodd {
+    position: absolute;
+    width: 7.78%;
+    top: calc(50% - 22.95px);
+    left: 13.58%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.newJon {
+    position: absolute;
+    width: 4.24%;
+    top: calc(50% - 22.82px);
+    left: 29.17%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.apr2019 {
+    position: absolute;
+    width: 6.32%;
+    top: calc(50% - 22.82px);
+    left: 51.16%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.medicine2 {
+    position: absolute;
+    width: 4.4%;
+    top: calc(50% - 22.82px);
+    left: 67.98%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div16 {
+    position: absolute;
+    height: 6.56%;
+    width: 100%;
+    top: 83.07%;
+    right: 0%;
+    bottom: 10.37%;
+    left: 0%;
+}
+.labelInTransit {
+    position: absolute;
+    height: 100%;
+    width: 9.16%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 90.85%;
+}
+.dollieHines {
+    position: absolute;
+    width: 9.92%;
+    top: calc(50% - 8.73px);
+    left: 0%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.lylaForgeSuite {
+    position: absolute;
+    width: 15.75%;
+    top: calc(50% - 9.08px);
+    left: 19.88%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.jan2019 {
+    position: absolute;
+    width: 7.77%;
+    top: calc(50% - 9.08px);
+    left: 47.93%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.book1 {
+    position: absolute;
+    width: 3.25%;
+    top: calc(50% - 9.08px);
+    left: 69.39%;
+    font-weight: 600;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.div17 {
+    position: absolute;
+    height: 3.69%;
+    width: 78.4%;
+    top: 92.91%;
+    right: 8.02%;
+    bottom: 3.4%;
+    left: 13.58%;
+}
+.bg3 {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 14px 14px 0px 0px;
+    background-color: #fcfdfd;
+    border: 0.6px solid #d5d5d5;
+    box-sizing: border-box;
+}
+.id {
+    position: absolute;
+    width: 2.59%;
+    top: calc(50% - 9.4px);
+    left: 2.36%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.name {
+    position: absolute;
+    width: 3.24%;
+    top: calc(50% - 9.09px);
+    left: 13.58%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.address {
+    position: absolute;
+    width: 5.32%;
+    top: calc(50% - 9.09px);
+    left: 29.17%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.date2 {
+    position: absolute;
+    width: 4.04%;
+    top: calc(50% - 9.4px);
+    left: 51.18%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.type1 {
+    position: absolute;
+    width: 5.87%;
+    top: calc(50% - 9.4px);
+    left: 67.96%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.status {
+    position: absolute;
+    width: 4.16%;
+    top: calc(50% - 9.09px);
+    left: 86.19%;
+    font-weight: 800;
+    display: inline-block;
+    height: 18.1px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.idStatus {
+    position: absolute;
+    height: 6.69%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 93.31%;
+    left: 0%;
+}
+.div18 {
+    position: absolute;
+    width: 7.32%;
+    top: calc(50% - 58.7px);
+    left: 2.44%;
+    font-weight: 600;
+    display: inline-block;
+    height: 19px;
+    opacity: 0.9;
+    mix-blend-mode: normal;
+}
+.button2 {
+    position: absolute;
+    top: 142px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button3 {
+    position: absolute;
+    top: 215px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button4 {
+    position: absolute;
+    top: 287px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button5 {
+    position: absolute;
+    top: 360px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button6 {
+    position: absolute;
+    top: 432px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button7 {
+    position: absolute;
+    top: 505px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button8 {
+    position: absolute;
+    top: 577px;
+    left: 1224px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.button9 {
+    position: absolute;
+    top: 650px;
+    left: 1225px;
+    border-radius: 10px;
+    background-color: #ce0538;
+    width: 77px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    font-family: 'Open Sans';
+}
+.ikayetListesi {
+    position: absolute;
+    height: 68.3%;
+    width: 91.04%;
+    top: 24.51%;
+    right: 4.51%;
+    bottom: 7.19%;
+    left: 4.44%;
+    color: #202224;
+    font-family: 'Nunito Sans';
+}
+.adminBa {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 1024px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 14px;
+    color: #ce0538;
+    font-family: 'Open Sans';
+}
+
