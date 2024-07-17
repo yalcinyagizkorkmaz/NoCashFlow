@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OpenAI
 
 class OpenAIService {
     private var apiKey: String
