@@ -55,14 +55,14 @@ async def get_requests_response(tc: str = Query(None)):
             cursor.execute('''
                 SELECT
                     id,
+                    user_id
                     tc,
                     ad,
                     soyad,
-                    request_type,
                     request,
                     request_date,
                     request_status,
-                    user_id
+                    catagory
                 FROM
                     dbo.requests_response
                 WHERE
