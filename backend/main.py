@@ -1,10 +1,17 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 import pyodbc
+import os
 
 app = FastAPI()
 
-3 + 3
+# if os is not mac , abort the app
+# if os.name != 'posix':
+#    raise Exception('This app is only for Mac OS')
+
+# if os is windows , abort the app
+# elif os.name != 'nt':
+#    raise Exception('This app is only for Windows OS')
 
 # Set Azure SQL connection string directly in the script
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
