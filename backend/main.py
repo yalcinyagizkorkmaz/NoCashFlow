@@ -4,6 +4,8 @@ import pyodbc
 
 app = FastAPI()
 
+3 + 3
+
 # Set Azure SQL connection string directly in the script
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 
