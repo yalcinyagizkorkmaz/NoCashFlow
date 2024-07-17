@@ -1,50 +1,52 @@
-from flask import Flask, request, jsonify
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import JSONResponse
 import pyodbc
 
-app = Flask(__name__)
+app = FastAPI()
+
+3 + 3
 
 # Set Azure SQL connection string directly in the script
-conn_str = 'Driver={ODBC Driver 18 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user2;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
+conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 
 # Veritabanı bağlantısı oluşturma
 conn = pyodbc.connect(conn_str)
 
-@app.route('/admin_bilgileri', methods=['GET'])
-def get_admin_bilgileri():
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
+
+@app.get("/admin_bilgileri")
+async def get_admin_bilgileri():
     try:
         cursor = conn.cursor()
         cursor.execute('SELECT admin_id, kullanici_adi, kullanici_sifre FROM dbo.admin_bilgileri')
         rows = cursor.fetchall()
         columns = [column[0] for column in cursor.description]
-        result = []
-        for row in rows:
-            result.append(dict(zip(columns, row)))
-        return jsonify(result)
+        result = [dict(zip(columns, row)) for row in rows]
+        return JSONResponse(content=result)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/kullanici_bilgileri', methoxds=['GET'])
-def get_kullanici_bilgileri():
+@app.get("/kullanici_bilgileri")
+async def get_kullanici_bilgileri():
     try:
         cursor = conn.cursor()
         cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
         rows = cursor.fetchall()
         columns = [column[0] for column in cursor.description]
-        result = []
-        for row in rows:
-            result.append(dict(zip(columns, row)))
-        return jsonify(result)
+        result = [dict(zip(columns, row)) for row in rows]
+        return JSONResponse(content=result)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/requests_response', methods=['GET'])
-def get_requests_response():
-    tc = request.args.get('tc')
+@app.get("/requests_response")
+async def get_requests_response(tc: str = Query(None)):
     if tc:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT 
+                SELECT
                     id,
                     tc,
                     ad,
@@ -53,22 +55,21 @@ def get_requests_response():
                     request,
                     request_date,
                     request_status,
-                    category
-                FROM 
+                    user_id
+                FROM
                     dbo.requests_response
-                WHERE 
+                WHERE
                     tc = ?
             ''', tc)
             rows = cursor.fetchall()
             columns = [column[0] for column in cursor.description]
-            result = []
-            for row in rows:
-                result.append(dict(zip(columns, row)))
-            return jsonify(result)
+            result = [dict(zip(columns, row)) for row in rows]
+            return JSONResponse(content=result)
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            raise HTTPException(status_code=500, detail=str(e))
     else:
-        return jsonify({"error": "TC kimlik numarası belirtilmedi."}), 400
+        raise HTTPException(status_code=400, detail="TC kimlik numarası belirtilmedi.")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import uvicorn
+    uvicorn.run(app, host='127.0.0.2', port=8001)
