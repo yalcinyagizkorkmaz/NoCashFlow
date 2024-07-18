@@ -5,7 +5,7 @@ import KullaniciBilgileri from './Components/KullaniciBilgileri';
 import AdminGiris from './Components/AdminGiris';
 import Chat from './Components/Chat';
 import AdminPanel from './Components/admin_panel';
-import SikayetDetay from './Components/sikayet_detay';
+import SikayetDetay from './Components/Sikayet_detay';
 
 
 
@@ -19,6 +19,8 @@ const App = () => {
         <Route path="/chat" element={<Chat />} />
         <Route path='/admin-paneli' element={<AdminPanel />} />
         <Route path='/sikayet-detay' element={<SikayetDetay />} />
+        <Route path='/admin-giris' element={<AdminPanel />} />
+        <Route path='/admin-giris' element={<SikayetDetay />} />
       </Routes>
     </Router>
   );

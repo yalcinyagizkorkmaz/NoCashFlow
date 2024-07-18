@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useCallback} from 'react';
 import "../CSS/admin_panel.css";
 import "../CSS/header.css";
 import "../CSS/sikayet_detay.css";
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { Divider, dtst } from 'antd';
-const sikayet_detay = () => {
+
+const Sikayet_detay = () => {
+    const navigate = useNavigate();
+    const onButtonSikayetDetayCikisClick = useCallback(() => {
+        navigate('/admin-giris'); // Navigate to '/kullanici-bilgileri' route on button click
+      }, [navigate])
     return (
         <div>
             <div className="header">
@@ -15,7 +19,7 @@ const sikayet_detay = () => {
                 <div className="header-right">
                     <img src="/Inset.png" alt="divider" className="divider" />
                     <span className="username">Burak Berk Aydın</span>
-                    <button className="logout-button" >Çıkış Yap</button>
+                    <button className="logout-button" onClick={onButtonSikayetDetayCikisClick} >Çıkış Yap</button>
                 </div>
             </div>
             <br></br>
@@ -50,4 +54,4 @@ const sikayet_detay = () => {
         </div>
     );
 }
-export default sikayet_detay;
+export default Sikayet_detay;

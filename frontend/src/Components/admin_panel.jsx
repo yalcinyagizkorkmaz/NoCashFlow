@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import "../CSS/admin_panel.css";
 import "../CSS/header.css";
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+
 const AdminPanel = () => {
     const navigate = useNavigate();
+    const onButtonSikayetCikisClick = useCallback(() => {
+        navigate('/admin-giris'); // Navigate to '/kullanici-bilgileri' route on button click
+      }, [navigate]);
+    
     return (
         <div>
             <div className="header">
@@ -14,7 +19,7 @@ const AdminPanel = () => {
                 <div className="header-right">
                     <img src="/Inset.png" alt="divider" className="divider" />
                     <span className="username">Burak Berk Aydın</span>
-                    <button className="logout-button" >Çıkış Yap</button>
+                    <button className="logout-button" onClick={onButtonSikayetCikisClick} >Çıkış Yap</button>
                 </div>
             </div>
             <br></br>
