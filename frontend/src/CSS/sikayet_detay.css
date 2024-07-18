@@ -1,0 +1,89 @@
+body {
+
+    font-family: 'Open Sans', sans-serif;
+    background-color: #F5F5F5;
+}
+
+h1 {
+    color: var(--Text-text-gray-dark, #24292E);
+    font-family: "Open Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight:bold;
+    line-height: 32px;
+}
+
+p {
+    color: var(--Text-text-gray-light, #6A737D);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+}
+
+h2 {
+    color: var(--Text-text-gray-dark, #24292E);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+
+.content {
+    width: 70%;
+    height: auto;
+    margin: 0 auto;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    padding-left: 40px;
+    border: 1px solid rgb(187, 186, 186);
+}
+
+.divider2 {
+    display: flex;
+    background-color: rgb(210, 207, 207);
+    width: 98%;
+    height: 1.5px;
+
+
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin: 20px;
+}
+
+.cozuldu {
+    display: flex;
+    width: 267.222px;
+    height: 65px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 20px;
+
+    background: #00b69b37;
+    color: #005d4f
+}
+
+.cozuluyor {
+    display: flex;
+    width: 267.222px;
+    height: 65px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 20px;
+    border-radius: 20px;
+
+    background: #6226ef59;
+    color: #3200a5
+}
