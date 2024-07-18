@@ -1,0 +1,40 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #F5F5F5;
+}
+
+
+.title{
+    width: 332px;
+    height: 50px;
+    flex-shrink: 0;
+    color: #000;
+    font-family: "Open Sans";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; 
+    margin-left: 2%;
+
+}
+.content-table{
+margin:30px;
+
+
+}
+.incele-button{
+    display: flex;
+    width: 77px;
+    height: 25px;
+    padding: 14px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border:none;
+    background: #CE0538;
+    color:white;
+}
