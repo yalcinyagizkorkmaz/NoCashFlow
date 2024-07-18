@@ -1,17 +1,9 @@
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.responses import JSONResponse
 import pyodbc
-import os
+import socket
 
 app = FastAPI()
-
-# if os is not mac , abort the app
-# if os.name != 'posix':
-#    raise Exception('This app is only for Mac OS')
-
-# if os is windows , abort the app
-# elif os.name != 'nt':
-#    raise Exception('This app is only for Windows OS')
 
 # Set Azure SQL connection string directly in the script
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
@@ -89,7 +81,7 @@ async def get_requests_response(tc: str = Query(None)):
             cursor.execute('''
                 SELECT
                     id,
-                    user_id
+                    user_id,
                     tc,
                     ad,
                     soyad,
@@ -111,6 +103,19 @@ async def get_requests_response(tc: str = Query(None)):
     else:
         raise HTTPException(status_code=400, detail="TC kimlik numarası belirtilmedi.")
 
+# Function to find an available port
+def find_available_port(start_port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    port = start_port
+    while True:
+        try:
+            s.bind(("127.0.0.1", port))
+            s.close()
+            return port
+        except OSError:
+            port += 1
+
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8001)
+    available_port = find_available_port(8001)
+    uvicorn.run(app, host='127.0.0.1', port=available_port)
