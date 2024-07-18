@@ -11,7 +11,7 @@ import SwiftUI
 struct AI_BOTApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+           LaunchScreen()
         }
     }
 }
