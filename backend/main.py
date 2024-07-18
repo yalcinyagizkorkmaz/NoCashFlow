@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.responses import JSONResponse
 import pyodbc
-import socket
+import os
 
 app = FastAPI()
 
@@ -19,7 +19,8 @@ def root():
 async def get_admin_bilgileri():
     try:
         cursor = conn.cursor()
-        cursor.execute('SELECT admin_id, kullanici_adi, kullanici_sifre FROM dbo.admin_bilgileri')
+        # Fetching only admin IDs and usernames
+        cursor.execute('SELECT admin_id, kullanici_adi FROM dbo.admin_bilgileri')
         rows = cursor.fetchall()
         columns = [column[0] for column in cursor.description]
         result = [dict(zip(columns, row)) for row in rows]
@@ -27,6 +28,20 @@ async def get_admin_bilgileri():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.post("/admin/login")
+async def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
+    try:
+        cursor = conn.cursor()
+        # Using parameterized queries to prevent SQL Injection
+        cursor.execute("SELECT kullanici_sifre FROM dbo.admin_bilgileri WHERE kullanici_adi = ?", form_data.username)
+        admin = cursor.fetchone()
+        if admin and admin[0] == form_data.password:
+            return {"message": "Login successful"}
+        else:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 @app.get("/kullanici_bilgileri")
 async def get_kullanici_bilgileri():
     try:
