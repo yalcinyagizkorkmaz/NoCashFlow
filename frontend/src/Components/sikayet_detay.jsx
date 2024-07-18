@@ -46,7 +46,7 @@ const sikayet_detay = () => {
             <div className="container">
                 <button className="cozuldu">Çözüldü olarak işaretle</button>
                 <button className="cozuluyor">Çözülüyor olarak işaretle</button>
-        </div>
+            </div>
         </div>
     );
 }
