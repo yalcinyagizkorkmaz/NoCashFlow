@@ -5,7 +5,7 @@ import KullaniciBilgileri from './Components/KullaniciBilgileri';
 import AdminGiris from './Components/AdminGiris';
 import Chat from './Components/Chat';
 import AdminPanel from './Components/admin_panel';
-import SikayetDetay from './Components/Sikayet_detay';
+import SikayetDetay from './Components/SikayetDetay';
 
 
 
