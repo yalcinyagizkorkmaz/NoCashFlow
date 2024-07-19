@@ -101,7 +101,7 @@ async def chat_with_openai(user_input: str, user_id: int):
         request_id = cursor.execute('SELECT @@IDENTITY AS id').fetchval()
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to store complaint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayet database'e eklenemedi.: {str(e)}")
 
     # Return the data as a response model
     return {
@@ -144,9 +144,10 @@ async def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
         if admin and admin[0] == form_data.password:
             return {"message": "Login successful"}
         else:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
+            raise HTTPException(status_code=401, detail="Geçersiz giriiş")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
 @app.get("/kullanici_bilgileri")
 async def get_kullanici_bilgileri():
     try:
@@ -241,7 +242,7 @@ async def get_requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı.: {str(e)}")
     
 @app.get("/requests_response_sorted/old_to_rec", response_model=List[Complaint])
 async def requests_response_sorted():
@@ -268,7 +269,7 @@ async def requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı.: {str(e)}")
 
 # updating the status
 @app.put("/requests_response/{id}/status")
@@ -307,7 +308,7 @@ async def get_complaints_by_category(catagory: str = Query(..., description="Ent
         rows = cursor.fetchall()
 
         if not rows:
-            raise HTTPException(status_code=404, detail="No complaints found for this category")
+            raise HTTPException(status_code=404, detail="Bu kategoride şikayet bulunamadı")
 
         result = [{
             'id': row.id,
@@ -322,7 +323,7 @@ async def get_complaints_by_category(catagory: str = Query(..., description="Ent
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch complaints: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayetler görülemiyor.: {str(e)}")
 
 
 
