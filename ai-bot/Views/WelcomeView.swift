@@ -62,8 +62,11 @@ struct WelcomeView: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $navigateToNextScreen, destination: { NextView() })
+            .navigationDestination(isPresented: $navigateToNextScreen) {
+                           NextView()
+            }
         }
+        .navigationBarHidden(true)
     }
 }
 
