@@ -7,34 +7,11 @@ import uuid
 from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, field_validator
 from typing import List, Optional
 from openai import AzureOpenAI
 from requests.auth import HTTPBasicAuth
 import json
-
-
-
-
-#Get the API KEY 
-os.environ["AZURE_OPENAI_KEY"] = "*******" 
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://******.openai.azure.com/" 
-api_key = os.getenv("AZURE_OPENAI_KEY") 
-client = AzureOpenAI ( azure_endpoint = "https://******.openai.azure.com/", 
-                      api_key = os.getenv("AZURE_OPENAI_KEY"), 
-                      api_version = "2024-02-15-preview", timeout=30,
-)
-
-app=FastAPI()
-
-
-from pydantic import BaseModel, Field, field_validator, validator
-from typing import List, Optional
-from openai import AzureOpenAI
-from requests.auth import HTTPBasicAuth
-import json
-
-
 
 
 #Get the API KEY 
@@ -58,7 +35,7 @@ app=FastAPI()
 # elif os.name != 'nt':
 #    raise Exception('This app is only for Windows OS')
 
-# Set Azure SQL connection string directly in the script
+# connection string 
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 
 # Veritabanı bağlantısı oluşturma
@@ -94,54 +71,65 @@ except FileNotFoundError as e:
     message_text = []  # Default value if the file is not found
 
    
-# Endpoint to handle "chat" which creates complaints
 @app.post("/chat/", response_model=Complaint)
-async def chat_with_openai(user_input: str, user_id: int):
-    # Retrieve user details from the kullanici_bilgileri table
-    cursor = conn.cursor()
-    cursor.execute('SELECT tc, ad, soyad FROM dbo.kullanici_bilgileri WHERE user_id = ?', user_id)
-    user_details = cursor.fetchone()
-    if not user_details:
-        raise HTTPException(status_code=404, detail="User not found")
-    tc, ad, soyad = user_details
-
-    message_text.append({"role": "user", "content": user_input})
-
-    # Create the chat prompt and get response from OpenAI
-    completion = client.chat.completions.create(
-        model="gpt-4o",
-        messages=message_text,
-        max_tokens=4096,
-        temperature=0.7,
-        top_p=0.95,
-        stop=None
-    )
-    ai_response = completion.choices[0].message.content.strip()
-
-    # Store the user input and AI response in the database
+async def chat_with_openai(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...), user_input: str = Body(...)):
     try:
+        cursor = conn.cursor()
+       
+        # Ensure required fields are present
+        if not all([ad, soyad, tc, user_input]):
+            raise HTTPException(status_code=400, detail="Missing one or more required fields.")
+       
+        # Check if the user already exists
+        cursor.execute("SELECT user_id FROM kullanici_bilgileri WHERE tc = ?", tc)
+        user_info = cursor.fetchone()
+
+        if user_info:
+            user_id = user_info[0]
+        else:
+            # Insert new user if not exists and fetch the newly created user_id
+            cursor.execute("INSERT INTO kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)", ad, soyad, tc, tel)
+            conn.commit()  # Commit to ensure the user is added before fetching user_id
+            cursor.execute("SELECT SCOPE_IDENTITY();")  # Retrieve the last inserted identity in the current scope
+            user_id = cursor.fetchone()[0]
+
+        if user_id is None:
+            raise HTTPException(status_code=500, detail="Failed to create or retrieve user_id")
+
+        # Simulate AI response (replace with actual AI interaction)
+        ai_response = "Simulated AI response for testing; replace with actual AI call."
+
+        # Insert the complaint into the database
         cursor.execute('''
-            INSERT INTO dbo.requests_response (tc, ad, soyad, request, request_date, request_status, catagory, user_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (tc, ad, soyad, user_input, date.today(), 'cozulmedi', ai_response, user_id))
+            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, catagory)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (user_id, tc, ad, soyad, tel, user_input, date.today(), 'cozulmedi', ai_response))
         conn.commit()
-        request_id = cursor.execute('SELECT @@IDENTITY AS id').fetchval()
+        complaint_id = cursor.execute('SELECT @@IDENTITY AS id;').fetchone()[0]
+
+        return Complaint(
+            id=complaint_id,
+            user_id=user_id,
+            tc=tc,
+            ad=ad,
+            soyad=soyad,
+            tel=tel,
+            request=user_input,
+            request_date=date.today(),
+            request_status='cozulmedi',
+            catagory=ai_response
+        )
+
+    except pyodbc.Error as e:
+        conn.rollback()
+        logging.error(f"Database error: {e}")
+        raise HTTPException(status_code=500, detail=f"Database error: {e}")
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Şikayet database'e eklenemedi.: {str(e)}")
-
-    # Return the data as a response model
-    return {
-        "tc": tc,
-        "ad": ad,
-        "soyad": soyad,
-        "request": user_input,
-        "request_date": date.today(),
-        "request_status": 'cozulmedi',
-        "catagory": ai_response,
-        "user_id": user_id
-    }
-
+        logging.error(f"General error: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    finally:
+        cursor.close()
 
 @app.get("/")
 def root():
