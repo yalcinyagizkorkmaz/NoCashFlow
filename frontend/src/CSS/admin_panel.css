@@ -1,12 +1,11 @@
-body{
+body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
     background-color: #F5F5F5;
 }
 
-
-.title{
+.title {
     width: 332px;
     height: 50px;
     flex-shrink: 0;
@@ -15,16 +14,15 @@ body{
     font-size: 40px;
     font-style: normal;
     font-weight: 600;
-    line-height: 22px; 
+    line-height: 22px;
     margin-left: 2%;
-
 }
-.content-table{
-margin:30px;
 
-
+.content-table {
+    margin: 30px;
 }
-.incele-button{
+
+.incele-button {
     display: flex;
     width: 77px;
     height: 25px;
@@ -34,35 +32,52 @@ margin:30px;
     gap: 6px;
     flex-shrink: 0;
     border-radius: 10px;
-    border:none;
+    border: none;
     background: #CE0538;
-    color:white;
-}
-.filter-menu {
-    background-color: red;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 300px;
-    margin: auto;
     color: white;
 }
 
-.filter-item {
-    margin-bottom: 10px;
+.filter-menu {
+    width: 45%;
+    position: relative;
+    border-radius: 10px;
+    background-color: #ce0538;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 20px 0;
+    margin-left: 30px;
+    margin-top: 10px;
 }
 
-.filter-item label {
-    display: block;
-    margin-bottom: 5px;
+.filter-menu form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+   
+}
+
+.filter-item img.category-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
 }
 
 .filter-item select,
 .filter-item button {
-    width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
+    
 }
 
 .filter-item button {
