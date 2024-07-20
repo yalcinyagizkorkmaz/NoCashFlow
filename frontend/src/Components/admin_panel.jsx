@@ -8,6 +8,21 @@ const AdminPanel = () => {
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris'); // Navigate to '/kullanici-bilgileri' route on button click
       }, [navigate]);
+      const [category, setCategory] = useState('all');
+
+      const handleCategoryChange = (event) => {
+          setCategory(event.target.value);
+      };
+  
+      const handleReset = () => {
+          setCategory('all');
+      };
+  
+      const handleSort = () => {
+          // Sıralama işlemleri burada yapılabilir
+          console.log('Sıralama işlemi gerçekleştirildi');
+      };
+  
     
     return (
         <div>
@@ -24,34 +39,25 @@ const AdminPanel = () => {
             </div>
             <br></br>
             <div className="title">Şikayetler</div>
-            <div className="content-table">
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">TC</th>
-                            <th scope="col">İSİM</th>
-                            <th scope="col">ŞİKAYET</th>
-                            <th scope="col">TARİH</th>
-                            <th scope="col">KATEGORİ</th>
-                            <th scope="col">DURUM</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>111111111</td>
-                            <td>Döndü Dönmez</td>
-                            <td>18:13:50 tarihinde G2626 atmsinde</td>
-                            <td>15 Temmuz 2024</td>
-                            <td>ATM</td>
-                            <td>Çözüldü</td>
-                            <td>
-                                <button className="incele-button" onClick={()=>navigate("/sikayet-detay")}>İncele</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div className="filter-menu">
+            <form>
+                <div className="filter-item">
+                    <label htmlFor="category-select">Kategori Seçimi:</label>
+                    <select id="category-select" value={category} onChange={handleCategoryChange}>
+                        <option value="all">Tüm Kategoriler</option>
+                        <option value="kategori1">Kategori 1</option>
+                        <option value="kategori2">Kategori 2</option>
+                        <option value="kategori3">Kategori 3</option>
+                    </select>
+                </div>
+                <div className="filter-item">
+                    <button type="button" onClick={handleReset}>Filtreyi Sıfırla</button>
+                </div>
+                <div className="filter-item">
+                    <button type="button" onClick={handleSort}>Sırala</button>
+                </div>
+            </form>
+        </div>
            
         </div>
     );
