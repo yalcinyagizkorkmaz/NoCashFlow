@@ -38,3 +38,39 @@ margin:30px;
     background: #CE0538;
     color:white;
 }
+.filter-menu {
+    background-color: red;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 300px;
+    margin: auto;
+    color: white;
+}
+
+.filter-item {
+    margin-bottom: 10px;
+}
+
+.filter-item label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filter-item select,
+.filter-item button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.filter-item button {
+    background-color: white;
+    color: red;
+    cursor: pointer;
+}
+
+.filter-item button:hover {
+    background-color: #f3f3f3;
+}

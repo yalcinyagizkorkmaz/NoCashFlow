@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 import pyodbc
 import os
 from datetime import date, datetime
+import uuid
+from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field, validator
@@ -26,6 +28,27 @@ client = AzureOpenAI ( azure_endpoint = "https://******.openai.azure.com/",
 app=FastAPI()
 
 
+from pydantic import BaseModel, Field, field_validator, validator
+from typing import List, Optional
+from openai import AzureOpenAI
+from requests.auth import HTTPBasicAuth
+import json
+
+
+
+
+#Get the API KEY 
+os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b" 
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://rgacademy3oai.openai.azure.com/" 
+api_key = os.getenv("AZURE_OPENAI_KEY") 
+client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/", 
+                      api_key = os.getenv("AZURE_OPENAI_KEY"), 
+                      api_version = "2024-02-15-preview", timeout=30,
+)
+
+app=FastAPI()
+
+
 
 # if os is not mac , abort the app
 # if os.name != 'posix':
@@ -42,29 +65,33 @@ conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windo
 conn = pyodbc.connect(conn_str)
 
 class Complaint(BaseModel):
-    id: Optional[int]  # Automatically handled by the database
+    id: Optional[int]
     user_id: int
     tc: str = Field(..., max_length=11)
     ad: str = Field(..., max_length=255)
     soyad: str = Field(..., max_length=255)
-    request: Optional[str]  # Can be null
-    request_date: Optional[date]  # Can be null, handle formatting if inputting
-    request_status: Optional[str]  # Can be null
-    catagory: Optional[str] = Field(None, max_length=50)  # Can be null
+    request: Optional[str]
+    request_date: Optional[date]
+    request_status: Optional[str]
+    catagory: Optional[str] = Field(None, max_length=50)
 
-    @validator('request_date', pre=True, always=True)
+    @field_validator('request_date', mode='before')
     def format_date(cls, v):
         return v.strftime('%Y-%m-%d') if v else None
 
-
-
-def read_json_file(file_path): 
+def read_json_file(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"The file {file_path} does not exist.")
     with open(file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file) 
+        data = json.load(file)
         return data['messages']
-    
+
 file_path = 'few_shots.json'
-message_text = read_json_file(file_path)
+try:
+    message_text = read_json_file(file_path)
+except FileNotFoundError as e:
+    print(e)
+    message_text = []  # Default value if the file is not found
 
    
 # Endpoint to handle "chat" which creates complaints
@@ -163,11 +190,26 @@ async def get_kullanici_bilgileri():
 @app.post("/kullanici_bilgileri")
 async def create_kullanici_bilgileri(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
     try:
+        user_id = str(uuid.uuid4())  # UUID oluşturun
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)', ad, soyad, tc, tel)
+
+        # IDENTITY_INSERT ayarını açın
+        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri ON')
+
+        # Veritabanına yeni kullanıcı ekleyin
+        cursor.execute(
+            'INSERT INTO dbo.kullanici_bilgileri (user_id, ad, soyad, tc, tel) VALUES (?, ?, ?, ?, ?)',
+            (user_id, ad, soyad, tc, tel)
+        )
+
+        # IDENTITY_INSERT ayarını kapatın
+        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri OFF')
+
         conn.commit()
+
         return {"message": "Kullanıcı başarıyla oluşturuldu"}
     except Exception as e:
+        conn.rollback()  # Hata durumunda işlemi geri al
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/kullanici_bilgileri/{user_id}")
@@ -182,39 +224,7 @@ async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: s
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/kullanici_bilgileri")
-async def get_kullanici_bilgileri():
-    try:
-        cursor = conn.cursor()
-        cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
-        rows = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        result = [dict(zip(columns, row)) for row in rows]
-        return JSONResponse(content=result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/kullanici_bilgileri")
-async def create_kullanici_bilgileri(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)', ad, soyad, tc, tel)
-        conn.commit()
-        return {"message": "Kullanıcı başarıyla oluşturuldu"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/kullanici_bilgileri/{user_id}")
-async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('UPDATE dbo.kullanici_bilgileri SET ad = ?, soyad = ?, tc = ?, tel = ? WHERE user_id = ?', ad, soyad, tc, tel, user_id)
-        conn.commit()
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
-        return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
   
 
 @app.get("/requests_response_sorted/recent_to_old", response_model=List[Complaint])

@@ -1,79 +1,116 @@
-import { FunctionComponent } from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import styles from '../CSS/Chat.module.css';
 import indir1 from '../Png/indir1.png';
-import Rectangle3 from '../Png/Rectangle3.png';
-import Group from '../Png/Group.svg';
+import { Input, Button, List, Layout } from 'antd';
+import axios from 'axios';
+import Ellipse1 from '../Png/Ellipse1.png';
+import Group from '../Png/Group.svg'; // Newly added group icon
 
+const { Header, Content } = Layout;
 
-const Chat: FunctionComponent = () => {
+function Chat() {
+    const [messages, setMessages] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+
+    useEffect(() => {
+        setMessages([{
+            sender: 'bot',
+            text: 'Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum. ' +
+                  'Şikayetinizin en kısa sürede iletilip çözümlenmesi için size ben yardımcı ' +
+                  'olacağım. Şimdi tüm detaylarıyla şikayetinizi yazabilirsiniz :)',
+            timestamp: new Date().toLocaleTimeString()
+          }]);
+          }, []); 
+
+    const sendMessage = () => {
+        if (inputValue.trim()) {
+            const userMessage = { sender: 'user', text: inputValue, timestamp: new Date().toLocaleTimeString() };
+            setMessages([...messages, userMessage]);
+            setInputValue('');
+
+            axios.post('https://api.openai.com/v1/chat/completions', {
+                model: "gpt-3.5-turbo-0125",
+                messages: [
+                    { role: "system", content: "You are a helpful assistant." },
+                    { role: "user", content: inputValue }
+                ],
+            }, {
+                headers: {
+                    'Authorization': '',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                const botMessage = response.data.choices[0].message.content;
+                const timestamp = new Date().toLocaleTimeString();
+                setMessages(prevMessages => [
+                    ...prevMessages,
+                    { sender: 'bot', text: botMessage, timestamp }
+                ]);
+            }).catch(error => {
+                console.error("Error fetching response from OpenAI:", error);
+                setMessages(prevMessages => [
+                    ...prevMessages,
+                    { sender: 'bot', text: 'Bir hata oluştu. Lütfen tekrar deneyin.', timestamp: new Date().toLocaleTimeString() }
+                ]);
+            });
+        }
+    };
+
     return (
-        <div className={styles.chatBa}>
-            <img className={styles.chatBaChild} alt="" src={Rectangle3} />
-            <img className={styles.indir11} alt="" src={indir1} />
-            <div className={styles.rectangleParent}>
-                <div className={styles.groupChild} />
-                <div className={styles.groupParent}>
-                    <img className={styles.frameChild} alt="" src="Group 1.png" />
-                    <div className={styles.message}>
-                        <div className={styles.messageTextContainer}>
-                            <p className={styles.messageText}>Şikayetinizi detaylıca açıkladığınız için teşekkür ederim:) Şikayetinizi</p>
-                            <p className={styles.messageText}>“Atm” birimine ilettim. Şikayetinizin en kısa zamanda değerlendirilip ,</p>
-                            <p className={styles.messageText}>tarafınıza dönüş yapılacağından emin olabilirsiniz. Musmutlu günler</p>
-                            <p className={styles.messageText}>dilerim.</p>
-                        </div>
-                        <div className={styles.messageTime}>15:42</div>
-                    </div>
+        <div className={styles.App}>
+            <div className={styles.container}>
+                <div className={`${styles.column} ${styles['column-1']}`}>
+                    <img src={indir1} alt="Example" className={styles.image} />
                 </div>
-                <div className={styles.message}>
-                    <div className={styles.messageTextContainer}>
-                        <p className={styles.messageText}>18:13:50 tarihinde G2626 atmsinde 100 tl para yatırırken atmden</p>
-                        <p className={styles.messageText}>kaynaklı oluşan sorundan dolayı işlem gerçeklşirememiştir.</p>
-                        <p className={styles.messageText}>gereğinin yapılmasını isterim. syg</p>
-                    </div>
-                    <div className={styles.groupGroup}>
-                        <img className={styles.groupIcon} alt="" src={Group} />
-                        <div className={styles.messageTime}>15:42</div>
-                    </div>
-                </div>
-                <div className={styles.groupContainer}>
-                    <img className={styles.frameChild} alt="" src="Group 1.png" />
-                    <div className={styles.message}>
-                        <div className={styles.messageTextContainer}>
-                            <p className={styles.messageText}>Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum.</p>
-                            <p className={styles.messageText}>Şikayetinizin en kısa sürede iletilip çözümlenmesi için size ben yardımcı</p>
-                            <p className={styles.messageText}>olacağım. Şimdi tüm detaylarıyla şikayetinizi yazabilirsiniz :)</p>
-                        </div>
-                        <div className={styles.messageTime}>15:42</div>
-                    </div>
-                </div>
-                <div className={styles.rectangleGroup}>
-                    <div className={styles.groupItem} />
-                    <div className={styles.frameDiv}>
-                        <div className={styles.rectangleContainer}>
-                            <div className={styles.groupInner} />
-                            <div className={styles.inputPlaceholder}>Şikayetinizi yazın.</div>
-                        </div>
-                        <div className={styles.sendButton}>Gönder</div>
-                    </div>
-                </div>
-                <div className={styles.groupDiv}>
-                    <div className={styles.rectangleDiv} />
-                    <div className={styles.frameWrapper}>
-                        <div className={styles.frameContainer}>
-                            <div className={styles.groupParent1}>
-                                <img className={styles.frameInner} alt="" src="Group 1.png" />
-                                <div className={styles.iBotParent}>
-                                    <b className={styles.iBot}>I-Bot</b>
-                                    <div className={styles.onlineStatus}>Çevrimiçi</div>
-                                </div>
+                <div className={`${styles.column} ${styles['column-2']}`}>
+                    <div className={styles.rectangleDiv}>
+                        <Header className={styles.header}>
+                            <img className={styles.frameChild} src={Ellipse1} alt="Ellipse" />
+                            <div className={styles.botName}>
+                                <p className={styles.botTitle}>I-Bot</p>
+                                <p className={styles.onlineStatus}>Çevrimiçi</p>
                             </div>
-                        </div>
+                        </Header>
+                        <div className={styles.divider1}></div>
+                        <Content className={styles.content}>
+                            <List
+                                dataSource={messages}
+                                renderItem={item => (
+                                    <List.Item className={item.sender === 'user' ? styles.message + ' ' + styles.user : styles.message + ' ' + styles.bot}>
+                                        {item.sender === 'bot' && <img src={Ellipse1} alt="Ellipse" className={styles.botMessageImage} />}
+                                        <div className={item.sender === 'user' ? styles.userMessageContent : styles.botMessageContent}>
+                                            <div className={styles.messageText}>{item.text}</div>
+                                            <div className={styles.timestamp}>
+                                            {item.sender === 'user' && <img src={Group} alt="Group Icon" />}
+                                                {item.timestamp}
+                                               
+                                            </div>
+                                        </div>
+                                    </List.Item>
+                                )}
+                                className={styles.messageList}
+                            />
+                           <div className={styles.divider2}></div>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    value={inputValue}
+                                    onChange={e => setInputValue(e.target.value)}
+                                    onPressEnter={sendMessage}
+                                    placeholder="Şikayetlerinizi yazınız..."
+                                    className={styles.input}
+                                />
+                                <Button type="primary" onClick={sendMessage} className={styles.button}>
+                                    Gönder
+                                </Button>
+                            </div>
+                        </Content>
                     </div>
-                    <div className={styles.lineDiv} />
                 </div>
             </div>
         </div>
     );
-};
+}
 
 export default Chat;
