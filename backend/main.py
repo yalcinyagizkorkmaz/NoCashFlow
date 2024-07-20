@@ -4,6 +4,7 @@ import pyodbc
 import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+import uuid
 
 app = FastAPI()
 
@@ -67,11 +68,16 @@ async def get_kullanici_bilgileri():
 @app.post("/kullanici_bilgileri")
 async def create_kullanici_bilgileri(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
     try:
+        user_id = str(uuid.uuid4())  # UUID oluşturun
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)', ad, soyad, tc, tel)
+        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri ON')  # IDENTITY_INSERT ayarını açın
+        cursor.execute('INSERT INTO dbo.kullanici_bilgileri (user_id, ad, soyad, tc, tel) VALUES (?, ?, ?, ?, ?)', user_id, ad, soyad, tc, tel)
+        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri OFF')  # IDENTITY_INSERT ayarını kapatın
         conn.commit()
         return {"message": "Kullanıcı başarıyla oluşturuldu"}
     except Exception as e:
+        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri OFF')  # Hata durumunda ayarı kapat
+        conn.rollback()  # Hata durumunda işlemi geri al
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/kullanici_bilgileri/{user_id}")
@@ -86,39 +92,7 @@ async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: s
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/kullanici_bilgileri")
-async def get_kullanici_bilgileri():
-    try:
-        cursor = conn.cursor()
-        cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
-        rows = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        result = [dict(zip(columns, row)) for row in rows]
-        return JSONResponse(content=result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/kullanici_bilgileri")
-async def create_kullanici_bilgileri(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)', ad, soyad, tc, tel)
-        conn.commit()
-        return {"message": "Kullanıcı başarıyla oluşturuldu"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/kullanici_bilgileri/{user_id}")
-async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('UPDATE dbo.kullanici_bilgileri SET ad = ?, soyad = ?, tc = ?, tel = ? WHERE user_id = ?', ad, soyad, tc, tel, user_id)
-        conn.commit()
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
-        return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/requests_response")
 async def get_requests_response(tc: str = Query(None)):

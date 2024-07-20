@@ -1,333 +1,213 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
-body {
-  	margin: 0; line-height: normal;
+
+.App {
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.chatBaChild {
-    position: absolute;
-    top: calc(50% - 512px);
-    left: calc(50% - 280px);
-    width: 1000px;
-    height: 1024px;
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
-.indir11 {
-    width: 35%;
-    position: relative;
-    /*max-width: 40%;*/
-    overflow: hidden;
-    height: 872px;
-    object-fit: cover;
+
+.column {
+    padding: 20px;
 }
-.groupChild {
-    position: absolute;
-    top: 0px;
-    left: 0px;
+
+.column-1 {
+    flex: 1;
+    background-color: #ffffff;
+}
+
+.column-2 {
+    flex: 2;
+    background-color: #0033A0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image {
+    max-width: 100%;
+    height: auto;
+    float: left;
+    margin-right: 20px;
+}
+
+.rectangleDiv {
+    width: 90%;
     border-radius: 20px;
     background-color: #fff;
-    width: 875px;
-    height: 906px;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
-.frameChild {
-    width: 24px;
+
+.header {
+    color: #001529;
+    text-align: center;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px 20px 0 0;
+    padding: 10px;
     position: relative;
-    height: 24px;
-    object-fit: cover;
 }
-.ikayetiniziDetaylcaAklad {
+
+.divider1 {
+    border-top: 2px solid #ccc;
+    width: 100%;
     margin: 0;
-}
-.ikayetiniziDetaylcaAkladContainer {
-    position: relative;
-}
-.div {
-    position: relative;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 300;
-    color: rgba(0, 0, 0, 0.45);
-}
-.message {
-    border-radius: 0px 16px 16px 16px;
-    background-color: #f4f4f7;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 12px 18px 6px;
-    gap: 4px;
-}
-.groupParent {
-    position: absolute;
-    top: 358px;
-    left: 15px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 9px;
-}
-.groupIcon {
-    width: 12px;
-    position: relative;
-    height: 12px;
-}
-.div1 {
-    position: relative;
-    line-height: 16px;
-    font-weight: 300;
-}
-.groupGroup {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    text-align: left;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.45);
-}
-.message1 {
-    position: absolute;
-    top: 225px;
-    right: 35px;
-    border-radius: 16px 16px 0px 16px;
-    background-color: #f4f4f7;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-start;
-    padding: 12px 18px 6px;
-    gap: 4px;
-    text-align: right;
-}
-.groupContainer {
-    position: absolute;
-    top: 109px;
-    left: 15px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 9px;
-}
-.groupItem {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    box-shadow: 0px -1px 0px #eee;
-    border-radius: 0px 0px 20px 20px;
-    background-color: #fff;
-    width: 875px;
-    height: 74px;
-}
-.groupInner {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    border-radius: 12px;
-    background-color: #fafafa;
-    width: 774.4px;
-    height: 36px;
-}
-.ikayetiniziYazn {
-    position: absolute;
-    top: 9px;
-    left: 17.05px;
-    display: inline-block;
-    width: 210.3px;
-}
-.rectangleContainer {
-    width: 774.4px;
-    position: relative;
-    height: 36px;
-}
-.gnder {
-    position: relative;
-    font-weight: 600;
-    color: #0096d6;
-}
-.frameDiv {
-    position: absolute;
-    top: 5px;
-    left: 4px;
-    border-radius: 0px 0px 20px 20px;
-    width: 871px;
-    height: 64px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 11px;
-}
-.rectangleGroup {
-    position: absolute;
-    top: 832px;
-    left: 0px;
-    width: 875px;
-    height: 74px;
-    color: rgba(0, 0, 0, 0.45);
-}
-.rectangleDiv {
-    position: absolute;
-    top: 0px;
-    left: 1.21px;
-    border-radius: 20px 20px 0px 0px;
-    background-color: #fff;
-    width: 873.8px;
-    height: 87.3px;
+    padding: 0;
 }
 
-.frameInner {
-    width: 42px;
-    position: relative;
-    height: 42px;
-    object-fit: cover;
+.divider2 {
+    border-top: 2px solid #ccc;
+    width: 130%;
+    margin-left: -15%;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: -15px;
+    padding: 0;
+    box-sizing: border-box;
 }
-.iBot {
-    width: 99px;
-    position: relative;
-    line-height: 16px;
-    display: inline-block;
-}
-.evrimii {
-    width: 178px;
-    position: relative;
-    font-size: 14px;
-    line-height: 16px;
-    color: #0096d6;
-    display: inline-block;
-}
-.iBotParent {
-    height: 42px;
+
+.content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2px 0px;
-    box-sizing: border-box;
-    gap: 4px;
+    height: 100%;
+    justify-content: space-between;
+    padding: 10px;
 }
-.groupParent1 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
+
+.messageList {
+    overflow-y: auto;
+    flex: 1;
+    padding-bottom: 20px;
 }
-.frameContainer {
-    width: 291px;
-    height: 42px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-.frameWrapper {
-    position: absolute;
-    top: 12.88px;
-    left: 14.56px;
-    border-radius: 20px 20px 0px 0px;
-    width: 849.5px;
-    height: 60.1px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-}
-.lineDiv {
-    position: absolute;
-    top: 87.29px;
-    left: 0px;
-    border-top: 1px solid #eee;
-    box-sizing: border-box;
-    width: 876px;
-    height: 1px;
-}
-.groupDiv {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 875px;
-    height: 87.3px;
-    font-size: 16px;
-}
-.rectangleParent {
-    position: absolute;
-    top: 59px;
-    left: 502px;
-    width: 875px;
-    height: 906px;
-}
-.chatBa {
-    width: 100%;
+
+.message {
+    margin-bottom: 10px;
+    padding: 5px; /* Boyutu küçültmek için padding azaltıldı */
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
-    background-color: #fff;
-    height: 1024px;
-    overflow: hidden;
-    text-align: left;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.85);
-    font-family: 'Open Sans';
+    display: flex;
+    align-items: center;
 }
-.rectangleIcon {
-    width: 100%;
-    position: relative;
-    max-width: 100%;
-    overflow: hidden;
-    height: 1024px;
-    }
+
+.messageContent {
   
-.tarihindeG2626Atmsinde {
-  	margin: 0;
-}
-.tarihindeG2626AtmsindeContainer {
-  	position: relative;
-}
-.groupIcon {
-  	width: 12px;
-  	position: relative;
-  	height: 12px;
-}
-.div {
-  	position: relative;
-  	line-height: 16px;
-  	font-weight: 300;
-}
-.groupParent {
-  	display: flex;
-  	flex-direction: row;
-  	align-items: center;
-  	justify-content: flex-start;
-  	gap: 8px;
-  	text-align: left;
-  	font-size: 12px;
-  	color: rgba(0, 0, 0, 0.45);
-}
-.message {
-  	position: relative;
-  	border-radius: 16px 16px 0px 16px;
-  	background-color: #f4f4f7;
-  	width: 100%;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-end;
-  	justify-content: flex-start;
-  	padding: 12px 18px 6px;
-  	box-sizing: border-box;
-  	gap: 4px;
-  	text-align: right;
-  	font-size: 14px;
-  	color: rgba(0, 0, 0, 0.85);
-  	font-family: 'Open Sans';
+    border-radius: 10px;
+    padding: 10px; /* Alt kartın padding'i */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    max-width: 70%;
 }
 
-.ellipseIcon {
-    width: 100%;
-    position: relative;
-    border-radius: 50%;
-    max-width: 100%;
-    overflow: hidden;
-    height: 42px;
-    object-fit: cover;
-    }
-    
+.message.bot {
+    justify-content: flex-start;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.botMessageContent {
+    color: rgba(0, 0, 0, 0.45);
+    background-color: #f3ebebcb; /* Gri arka plan rengi */
+    border-radius: 10px; /* Border radius uygulanacak */
+    padding: 10px;
+    max-width: 400px;
+    text-align: left; /* Ensure messages are aligned to the left */
+}
+
+.userMessageContent {
+    color: rgba(0, 0, 0, 0.45);
+    background-color: #f3ebebcb; /* Gri arka plan rengi */
+    border-radius: 10px; /* Border radius uygulanacak */
+    padding: 10px;
+    max-width: 400px;
+    text-align: right; /* Ensure messages are aligned to the left */
+}
+
+.botMessageImage {
+    margin-right: 5px; /* Reduce the margin between the image and message text */
+    width: 20px; /* Adjust width */
+    height: 20px; /* Adjust height */
+   
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 5px;
+    align-self: flex-start;
+}
+
+.timestamp img {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+.input {
+    flex: 1;
+    margin-right: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #d9d9d9;
+    padding: 10px 20px;
+    margin-left: 10px;
+}
+
+.button {
+    background-color: transparent;
+    border: 1px solid #1890ff;
+    color: #1890ff;
+    height: 43%;
+    padding: 10px 20px;
+    margin-right: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-radius: 4px;
+}
+
+.button:hover {
+    background-color: #1890ff;
+    color: white;
+}
+
+.frameChild {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px; /* Reduce the margin between the image and message */
+}
+
+.botName {
+    display: flex;
+    flex-direction: column; /* İçerikleri dikey hizalamak için */
+    align-items: flex-start;
+    margin-left: 10px;
+}
+
+.botTitle {
+    font-weight: bold;
+    margin-right: 5px; /* Sağ boşluk */
+    margin: 0px;
+}
+
+.onlineStatus {
+    color: #0096d6;
+    font-size: 12px; /* Yazı boyutu */
+    margin-right: 5px; /* Sol boşluk */
+    margin: 0px; /* I-Bot yazısının hemen altında */
+}
