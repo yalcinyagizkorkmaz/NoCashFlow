@@ -24,6 +24,9 @@ const AdminPanel: FunctionComponent = () => {
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
     }, [navigate]);
+    const handleIncelemeChange = useCallback(() => {
+        navigate('/sikayet-detay');
+    }, [navigate]);
 
     const [category, setCategory] = useState('all');
     const [isSortDropdownVisible, setIsSortDropdownVisible] = useState(false);
@@ -212,6 +215,13 @@ const AdminPanel: FunctionComponent = () => {
                                             onClick={() => handleStatusChange(index, 'In Progress')}
                                         >
                                             Çözülüyor
+                                        </button>
+                                        <button 
+                                            className={`inceleme-button ${complaint.status === 'inceleme' ? 'active' : ''}`} 
+                                            disabled={complaint.status === 'inceleme'}
+                                            onClick={() => handleIncelemeChange(index, 'inceleme')}
+                                        >
+                                           İnceleme
                                         </button>
                                     </div>
                                 </td>

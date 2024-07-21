@@ -246,6 +246,11 @@ tbody tr:hover {
     cursor: not-allowed;
     background-color: #e0e0e0;
 }
+.inceleme-button {
+    background-color: red;
+    color: white;
+}
+
 
 
 
