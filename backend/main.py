@@ -54,9 +54,11 @@ class Complaint(BaseModel):
     request_status: Optional[str]
     catagory: Optional[str] = Field(None, max_length=50)
 
-    @validator('request_date', pre=True, always=True)
-    def format_date(cls, v):
-        return v.strftime('%Y-%m-%d') if v else None
+    @validator('request_date', pre=True, allow_reuse=True)
+    def format_date(cls, value):
+        if isinstance(value, date):
+            return value.strftime('%Y-%m-%d')
+       
 
 class User(BaseModel):
     ad: str
@@ -74,20 +76,22 @@ file_path = 'few_shots.json'
 message_text = read_json_file(file_path)
 
    
+# Adjust the endpoint to fetch and return all required data:
 @app.post("/chat/", response_model=Complaint)
 async def chat_with_openai(user_input: str, user_id: int):
     cursor = conn.cursor()
-    cursor.execute('SELECT tc, ad, soyad FROM dbo.kullanici_bilgileri WHERE user_id = ?', user_id)
+    # Fetching user details along with telephone
+    cursor.execute('SELECT tc, ad, soyad, tel FROM dbo.kullanici_bilgileri WHERE user_id = ?', user_id)
     user_details = cursor.fetchone()
-   
+
     if not user_details:
         raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
    
-    tc, ad, soyad = user_details
+    tc, ad, soyad, tel = user_details
 
     message_text.append({"role": "user", "content": user_input})
 
-    # This is a hypothetical call to OpenAI's API, replace with your actual code
+    # Assuming hypothetical API call setup
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=message_text,
@@ -100,9 +104,9 @@ async def chat_with_openai(user_input: str, user_id: int):
 
     try:
         cursor.execute('''
-            INSERT INTO dbo.requests_response (tc, ad, soyad, request, request_date, request_status, catagory, user_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (tc, ad, soyad, user_input, date.today(), 'cozulmedi', ai_response, user_id))
+            INSERT INTO dbo.requests_response (tc, ad, soyad, tel, request, request_date, request_status, catagory, user_id)
+            VALUES (?, ?, ?, ?, ?, GETDATE(), 'cozulmedi', ?, ?)
+        ''', (tc, ad, soyad, tel, user_input, ai_response, user_id))
         conn.commit()
         request_id = cursor.execute('SELECT @@IDENTITY AS id').fetchval()
     except Exception as e:
@@ -110,15 +114,19 @@ async def chat_with_openai(user_input: str, user_id: int):
         raise HTTPException(status_code=500, detail=f"Şikayet eklenemedi: {str(e)}")
 
     return {
+        "id": request_id,
+        "user_id": user_id,
         "tc": tc,
         "ad": ad,
         "soyad": soyad,
+        "tel": tel,
         "request": user_input,
         "request_date": date.today(),
         "request_status": 'cozulmedi',
-        "catagory": ai_response,
-        "user_id": user_id
+        "catagory": ai_response
     }
+   
+
 
 @app.get("/")
 def root():
@@ -257,7 +265,7 @@ async def get_requests_response_sorted():
     try:
         cursor = conn.cursor()
         query = '''
-            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory
+            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
             FROM dbo.requests_response
             ORDER BY request_date DESC
         '''
@@ -273,7 +281,8 @@ async def get_requests_response_sorted():
             'request': row.request,
             'request_date': row.request_date.strftime("%Y-%m-%d") if row.request_date else None,
             'request_status': row.request_status,
-            'catagory': row.catagory
+            'catagory': row.catagory,
+            'tel': row.tel
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
@@ -336,13 +345,17 @@ class CategoryEnum(str, Enum):
     bireysel_kredi_kartlari = "Bireysel Kredi Kartları"
     debit_kartlar = "Debit Kartlar"
     yatirim_islemleri = "Yatırım İşlemleri"
+    dijital_bankacilik = "ATM"
+    dij_bankacilik = "İnternet Bankacılığı"
     para_transferi = "Para Transferi"
     vadeli_mevduat = "Vadeli Mevduat"
     hesap_kart_bloke_kaldirma = "Hesap/Kart Bloke Kaldırma"
+    fraud = "EFT/ Havale Teyit"
     dolandiricilik_bilgi_disi_suphe = "Dolandırıcılık-Bilgi Dışı Şüph. Hesap-Kart İşl."
     bilgi_belge_sahtecilik_kayip = "Bilgi/Belge Sahtecilik/Kayıp"
     konut_sigortasi = "Konut Sigortası"
     bireysel_kredi_hayat_sigortasi = "Bireysel Kredi Hayat Sigortası"
+    ferdi_kaza = "Ferdi Kaza Sigortası"
     iletisim_merkezi = "İletişim Merkezi"
 
 @app.get("/requests_response/by_category", response_model=List[Complaint])
@@ -370,7 +383,7 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
             ad=row.ad,
             soyad=row.soyad,
             request=row.request,
-            request_date=row.request_date.strftime("%Y-%m-%d") if row.request_date else None,
+            request_date=row.request_date,
             request_status=row.request_status,
             catagory=row.catagory
         ) for row in rows]
