@@ -38,7 +38,7 @@ body {
 }
 
 .filter-menu {
-    width: 45%;
+    width: 50%;
     position: relative;
     border-radius: 10px;
     background-color: #ce0538;
@@ -49,6 +49,7 @@ body {
     margin: 20px 0;
     margin-left: 30px;
     margin-top: 10px;
+    height: 70px;
 }
 
 .filter-menu form {
@@ -63,7 +64,9 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-   
+    flex: 1;
+    justify-content: center;
+    margin-left: 15px;
 }
 
 .filter-item img.category-icon {
@@ -77,15 +80,61 @@ body {
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    
-}
-
-.filter-item button {
-    background-color: white;
-    color: red;
+    background-color: #CE0538;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
+    text-align: center;
 }
 
 .filter-item button:hover {
     background-color: #f3f3f3;
+    color: #ce0538;
+}
+
+.kategori {
+    font-weight: bold;
+    color: white;
+    margin-top: 20px;
+}
+
+.select-category {
+    width: 130%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #CE0538;
+    color: white;
+    font-weight: bold;
+    ;
+}
+
+.select-category:hover {
+    background-color: white;
+    color: #CE0538;
+}
+
+.sort-dropdown {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    margin-top: 10px;
+ 
+}
+
+.sort-dropdown button {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+
+}
+
+.sort-dropdown button:hover {
+    background-color: #f1f1f1;
 }
