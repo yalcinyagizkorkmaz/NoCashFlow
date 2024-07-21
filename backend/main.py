@@ -2,18 +2,18 @@ from fastapi import FastAPI, APIRouter,HTTPException, Query, Body, Request
 from fastapi.responses import JSONResponse
 import pyodbc
 import os
-import uuid
 from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field, field_validator, validator
+from pydantic import BaseModel, Field, validator
 from typing import List, Optional
 from openai import AzureOpenAI
 from requests.auth import HTTPBasicAuth
 import json
-
-
-
+from pyodbc import IntegrityError
+import logging
+from uuid import uuid4
+from enum import Enum
 
 #Get the API KEY 
 os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b" 
@@ -44,48 +44,50 @@ conn = pyodbc.connect(conn_str)
 
 class Complaint(BaseModel):
     id: Optional[int]
-    user_id: int
+    user_id: Optional[int]
     tc: str = Field(..., max_length=11)
     ad: str = Field(..., max_length=255)
     soyad: str = Field(..., max_length=255)
+    tel: Optional[str]
     request: Optional[str]
     request_date: Optional[date]
     request_status: Optional[str]
     catagory: Optional[str] = Field(None, max_length=50)
 
-    @field_validator('request_date', mode='before')
+    @validator('request_date', pre=True, always=True)
     def format_date(cls, v):
         return v.strftime('%Y-%m-%d') if v else None
 
-def read_json_file(file_path):
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"The file {file_path} does not exist.")
-    with open(file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-        return data['messages']
+class User(BaseModel):
+    ad: str
+    soyad: str
+    tc: str
+    tel: str
 
+
+def read_json_file(file_path): 
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file) 
+        return data['messages']
+    
 file_path = 'few_shots.json'
-try:
-    message_text = read_json_file(file_path)
-except FileNotFoundError as e:
-    print(e)
-    message_text = []  # Default value if the file is not found
+message_text = read_json_file(file_path)
 
    
-# Endpoint to handle "chat" which creates complaints
 @app.post("/chat/", response_model=Complaint)
 async def chat_with_openai(user_input: str, user_id: int):
-    # Retrieve user details from the kullanici_bilgileri table
     cursor = conn.cursor()
     cursor.execute('SELECT tc, ad, soyad FROM dbo.kullanici_bilgileri WHERE user_id = ?', user_id)
     user_details = cursor.fetchone()
+   
     if not user_details:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+   
     tc, ad, soyad = user_details
 
     message_text.append({"role": "user", "content": user_input})
 
-    # Create the chat prompt and get response from OpenAI
+    # This is a hypothetical call to OpenAI's API, replace with your actual code
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=message_text,
@@ -96,7 +98,6 @@ async def chat_with_openai(user_input: str, user_id: int):
     )
     ai_response = completion.choices[0].message.content.strip()
 
-    # Store the user input and AI response in the database
     try:
         cursor.execute('''
             INSERT INTO dbo.requests_response (tc, ad, soyad, request, request_date, request_status, catagory, user_id)
@@ -106,9 +107,8 @@ async def chat_with_openai(user_input: str, user_id: int):
         request_id = cursor.execute('SELECT @@IDENTITY AS id').fetchval()
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Şikayet database'e eklenemedi.: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayet eklenemedi: {str(e)}")
 
-    # Return the data as a response model
     return {
         "tc": tc,
         "ad": ad,
@@ -119,7 +119,6 @@ async def chat_with_openai(user_input: str, user_id: int):
         "catagory": ai_response,
         "user_id": user_id
     }
-
 
 @app.get("/")
 def root():
@@ -149,10 +148,9 @@ async def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
         if admin and admin[0] == form_data.password:
             return {"message": "Login successful"}
         else:
-            raise HTTPException(status_code=401, detail="Geçersiz giriiş")
+            raise HTTPException(status_code=401, detail="Geçersiz giriş")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
 @app.get("/kullanici_bilgileri")
 async def get_kullanici_bilgileri():
     try:
@@ -165,30 +163,36 @@ async def get_kullanici_bilgileri():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/kullanici_bilgileri")
-async def create_kullanici_bilgileri(ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
+@app.post("/kullanici_bilgileri", response_model=User, status_code=status.HTTP_201_CREATED)
+async def create_kullanici_bilgileri(user: User):
     try:
-        user_id = str(uuid.uuid4())  # UUID oluşturun
-        cursor = conn.cursor()
-
-        # IDENTITY_INSERT ayarını açın
-        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri ON')
-
-        # Veritabanına yeni kullanıcı ekleyin
-        cursor.execute(
-            'INSERT INTO dbo.kullanici_bilgileri (user_id, ad, soyad, tc, tel) VALUES (?, ?, ?, ?, ?)',
-            (user_id, ad, soyad, tc, tel)
-        )
-
-        # IDENTITY_INSERT ayarını kapatın
-        cursor.execute('SET IDENTITY_INSERT dbo.kullanici_bilgileri OFF')
-
-        conn.commit()
-
-        return {"message": "Kullanıcı başarıyla oluşturuldu"}
+        # Connect to the database
+            cursor = conn.cursor()
+            # Prepare the SQL command
+            sql_command = """
+                INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel)
+                VALUES (?, ?, ?, ?)
+            """
+            # Execute the SQL command
+            cursor.execute(sql_command, (user.ad, user.soyad, user.tc, user.tel))
+            conn.commit()
+            # Optionally, fetch and return the ID of the created user
+            cursor.execute("SELECT @@IDENTITY AS id;")
+            user_id = cursor.fetchone()[0]
+            return {
+                "id": user_id,
+                "ad": user.ad,
+                "soyad": user.soyad,
+                "tc": user.tc,
+                "tel": user.tel
+            }
+    except pyodbc.Error as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"Database hatası: {str(e)}")
     except Exception as e:
-        conn.rollback()  # Hata durumunda işlemi geri al
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
+
+
 
 @app.put("/kullanici_bilgileri/{user_id}")
 async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
@@ -202,7 +206,50 @@ async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: s
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/kullanici_bilgileri")
+async def get_kullanici_bilgileri():
+    try:
+        cursor = conn.cursor()
+        cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
+        rows = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        result = [dict(zip(columns, row)) for row in rows]
+        return JSONResponse(content=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/kullanici_bilgileri", status_code=status.HTTP_201_CREATED)
+async def create_kullanici_bilgileri(user: User):
+    try:
+        # Connect to the database
+        cursor = conn.cursor()
+        # Insert the new user into the database
+        cursor.execute(
+            "INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)",
+            (user.ad, user.soyad, user.tc, user.tel)
+        )
+        conn.commit()
+    except pyodbc.DatabaseError as e:
+        error = str(e)
+        if 'IDENTITY_INSERT' in error:
+            raise HTTPException(status_code=400, detail="Bu değer girilemiyor")
+        else:
+            raise HTTPException(status_code=500, detail=f"Database hatası: {error}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Kullanıcı oluşturulamadı: {str(e)}")
 
+
+@app.put("/kullanici_bilgileri/{user_id}")
+async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
+    try:
+        cursor = conn.cursor()
+        cursor.execute('UPDATE dbo.kullanici_bilgileri SET ad = ?, soyad = ?, tc = ?, tel = ? WHERE user_id = ?', ad, soyad, tc, tel, user_id)
+        conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
   
 
 @app.get("/requests_response_sorted/recent_to_old", response_model=List[Complaint])
@@ -230,7 +277,7 @@ async def get_requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı.: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
     
 @app.get("/requests_response_sorted/old_to_rec", response_model=List[Complaint])
 async def requests_response_sorted():
@@ -257,7 +304,7 @@ async def requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı.: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
 
 # updating the status
 @app.put("/requests_response/{id}/status")
@@ -281,10 +328,27 @@ async def update_request_status(id: int, status: str = Body(..., embed=True)):
         return JSONResponse(content={"message": "Şikayet durumu güncellendi"})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+# kategori
+class CategoryEnum(str, Enum):
+    mobil_deniz = "Mobil Deniz"
+    bireysel_kredi_kartlari = "Bireysel Kredi Kartları"
+    debit_kartlar = "Debit Kartlar"
+    yatirim_islemleri = "Yatırım İşlemleri"
+    para_transferi = "Para Transferi"
+    vadeli_mevduat = "Vadeli Mevduat"
+    hesap_kart_bloke_kaldirma = "Hesap/Kart Bloke Kaldırma"
+    dolandiricilik_bilgi_disi_suphe = "Dolandırıcılık-Bilgi Dışı Şüph. Hesap-Kart İşl."
+    bilgi_belge_sahtecilik_kayip = "Bilgi/Belge Sahtecilik/Kayıp"
+    konut_sigortasi = "Konut Sigortası"
+    bireysel_kredi_hayat_sigortasi = "Bireysel Kredi Hayat Sigortası"
+    iletisim_merkezi = "İletişim Merkezi"
 
 @app.get("/requests_response/by_category", response_model=List[Complaint])
-async def get_complaints_by_category(catagory: str = Query(..., description="Enter the category you wish to see.")):
+async def get_complaints_by_category(category: CategoryEnum = Query(..., description="Görmek istediğiniz kategoriyi seçiniz.")):
     try:
+        
         cursor = conn.cursor()
         query = '''
             SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory
@@ -292,26 +356,29 @@ async def get_complaints_by_category(catagory: str = Query(..., description="Ent
             WHERE catagory = ?
             ORDER BY request_date DESC
         '''
-        cursor.execute(query, catagory)
+        cursor.execute(query, category.value)
         rows = cursor.fetchall()
+        conn.close()
 
         if not rows:
             raise HTTPException(status_code=404, detail="Bu kategoride şikayet bulunamadı")
 
-        result = [{
-            'id': row.id,
-            'user_id': row.user_id,
-            'tc': row.tc,
-            'ad': row.ad,
-            'soyad': row.soyad,
-            'request': row.request,
-            'request_date': row.request_date.strftime("%Y-%m-%d") if row.request_date else None,
-            'request_status': row.request_status,
-            'catagory': row.catagory
-        } for row in rows]
-        return JSONResponse(content=result)
+        result = [Complaint(
+            id=row.id,
+            user_id=row.user_id,
+            tc=row.tc,
+            ad=row.ad,
+            soyad=row.soyad,
+            request=row.request,
+            request_date=row.request_date.strftime("%Y-%m-%d") if row.request_date else None,
+            request_status=row.request_status,
+            catagory=row.catagory
+        ) for row in rows]
+        return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Şikayetler görülemiyor.: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Şikayetler gösterilemiyor: {str(e)}")
+
+ 
 
 
 
