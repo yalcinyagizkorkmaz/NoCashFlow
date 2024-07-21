@@ -1,0 +1,12 @@
+<svg width="86" height="32" viewBox="0 0 86 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Indicator">
+<rect id="Bg" x="0.3" y="1.3" width="85.4" height="29.4" rx="7.7" fill="#CE0538" stroke="#DF0930" stroke-width="0.6"/>
+<g id="ic-keyboard-arrow-left-24px" opacity="0.6">
+<path id="Path" d="M25.41 20.4064L20.83 16L25.41 11.5936L24 10.24L18 16L24 21.76L25.41 20.4064Z" fill="white"/>
+</g>
+<g id="ic-keyboard-arrow-left-24px_2" opacity="0.9">
+<path id="Path_2" d="M61.59 20.4064L66.17 16L61.59 11.5936L63 10.24L69 16L63 21.76L61.59 20.4064Z" fill="white"/>
+</g>
+<path id="Line" opacity="0.700544" d="M43.5 31V1" stroke="#979797" stroke-width="0.4" stroke-linecap="square"/>
+</g>
+</svg>

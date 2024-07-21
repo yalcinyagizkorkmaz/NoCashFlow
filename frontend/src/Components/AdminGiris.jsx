@@ -21,7 +21,9 @@ const AdminGiriBA: FunctionComponent = () => {
         if (!username || !password) {
             message.error('Lütfen tüm alanları doldurun.');
         } else {
-            console.log("Admin giris Yapıldı!");
+            // Store the username in localStorage
+            localStorage.setItem('adminUsername', username);
+            console.log("Admin giriş Yapıldı!");
             navigate('/admin-paneli');
         }
     }, [username, password, navigate]);

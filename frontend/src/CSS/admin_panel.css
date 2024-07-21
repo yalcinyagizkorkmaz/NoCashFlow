@@ -138,3 +138,114 @@ body {
 .sort-dropdown button:hover {
     background-color: #f1f1f1;
 }
+/* Make the table container take full width */
+.table-container {
+    width: 90%;
+    margin: 20px 0; /* Add margin for spacing */
+    overflow-x: auto; /* Add horizontal scrolling for responsiveness */
+    margin-left: 50px;
+   
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Remove double borders between cells */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a 3D effect */
+}
+
+th, td {
+    border: 1px solid #ddd; /* Light gray border for table cells */
+    padding: 8px; /* Padding inside cells */
+    text-align: left; /* Align text to the left in cells */
+}
+
+th {
+    background-color: #f4f4f4; /* Light background for header cells */
+    font-weight: bold; /* Bold text for header cells */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors for better readability */
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+/* Status classes */
+.status-open {
+    color: green;
+}
+
+.status-in-progress {
+    color: orange;
+}
+
+.status-closed {
+    color: red;
+}
+
+
+.status-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.status-buttons button {
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white; /* Default text color */
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.status-buttons button:hover {
+    opacity: 0.8;
+}
+
+.status-buttons .resolved-button {
+    width: 100%;
+    background-color: #00b69b;
+    opacity: 0.6;
+}
+
+.status-buttons .unresolved-button {
+    width: 100%;
+    background-color: #ef3826;
+    opacity: 0.6;
+}
+
+.status-buttons .in-progress-button {
+    background-color: #6226ef;
+    opacity: 0.6;
+    width: 100%;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.pagination-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination-button:disabled {
+    cursor: not-allowed;
+    background-color: #e0e0e0;
+}
+
+
+
