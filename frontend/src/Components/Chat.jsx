@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import styles from '../CSS/Chat.module.css';
 import indir1 from '../Png/indir1.png';
@@ -30,15 +28,14 @@ function Chat() {
             setMessages([...messages, userMessage]);
             setInputValue('');
 
-            axios.post('https://api.openai.com/v1/chat/completions', {
-                model: "gpt-3.5-turbo-0125",
+            axios.post('https://rg-academy-4.openai.azure.com/openai/deployments/65e1b439-fd8b-4909-b00d-13e71ff9e3aa/chat/completions?api-version=2024-02-15-preview', {
                 messages: [
                     { role: "system", content: "You are a helpful assistant." },
                     { role: "user", content: inputValue }
                 ],
             }, {
                 headers: {
-                    'Authorization': '',
+                    'Authorization': ``,
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
