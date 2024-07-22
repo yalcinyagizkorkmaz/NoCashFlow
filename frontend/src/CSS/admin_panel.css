@@ -226,25 +226,30 @@ tbody tr:hover {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    background-color: #CE0538;
+    width: 10%;
+    margin-left: auto;
+    margin-right: 110px;
 }
+
 
 .pagination-button {
     margin: 0 5px;
     padding: 5px 10px;
     border: none;
-    background-color: #f0f0f0;
+    background-color:#CE0538;
     cursor: pointer;
     font-size: 16px;
 }
 
 .pagination-button.active {
-    background-color: #007bff;
+    background-color: #CE0538;
     color: white;
 }
 
 .pagination-button:disabled {
     cursor: not-allowed;
-    background-color: #e0e0e0;
+    background-color: #CE0538;
 }
 .inceleme-button {
     background-color: red;
