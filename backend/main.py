@@ -314,6 +314,10 @@ async def requests_response_sorted():
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
+    
+
+
+
 
 # updating the status
 @app.put("/requests_response/{id}/status")

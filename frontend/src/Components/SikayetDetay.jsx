@@ -1,14 +1,36 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import "../CSS/sikayet_detay.css";
 
-const Sikayet_detay: React.FC = () => {
+const Sikayet_detay = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const complaint = location.state?.complaint;
 
     const onButtonSikayetDetayCikisClick = () => {
         navigate('/admin-giris'); // Navigate to '/admin-giris' route on button click
+    };
+
+    const updateComplaintStatus = async (status) => {
+        try {
+            const response = await axios.put(`/api/complaints/${complaint.id}`, { status });
+            if (response.status === 200) {
+                navigate('/admin-paneli'); // Navigate to '/admin-panel' route on success
+            } else {
+                console.error('Failed to update complaint status:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating complaint status:', error);
+        }
+    };
+
+    const onMarkAsResolvedClick = () => {
+        updateComplaintStatus('Çözüldü');
+    };
+
+    const onMarkAsResolvingClick = () => {
+        updateComplaintStatus('Çözülüyor');
     };
 
     if (!complaint) {
@@ -52,8 +74,8 @@ const Sikayet_detay: React.FC = () => {
                 <br />
             </div>
             <div className="container">
-                <button className="cozuldu">Çözüldü olarak işaretle</button>
-                <button className="cozuluyor">Çözülüyor olarak işaretle</button>
+                <button className="cozuldu" onClick={onMarkAsResolvedClick}>Çözüldü olarak işaretle</button>
+                <button className="cozuluyor" onClick={onMarkAsResolvingClick}>Çözülüyor olarak işaretle</button>
             </div>
         </div>
     );

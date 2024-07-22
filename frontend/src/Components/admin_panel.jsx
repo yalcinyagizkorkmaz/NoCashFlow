@@ -20,6 +20,8 @@ const sortComplaintsByDate = (complaints: any[], order: string) => {
 };
 
 const AdminPanel: FunctionComponent = () => {
+    
+    
     const navigate = useNavigate();
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
@@ -187,13 +189,7 @@ const AdminPanel: FunctionComponent = () => {
                                 <td>{complaint.category}</td>
                                 <td>
                                     <div className="status-buttons">
-                                        <button 
-                                            className={`status-button resolved-button ${complaint.status === 'Closed' ? 'active' : ''}`} 
-                                            disabled={complaint.status === 'Closed'}
-                                            onClick={() => handleStatusChange(index, 'Closed')}
-                                        >
-                                            Çözüldü
-                                        </button>
+                                       
                                         <button 
                                             className={`status-button unresolved-button ${complaint.status === 'Open' ? 'active' : ''}`} 
                                             disabled={complaint.status === 'Open'}
@@ -201,13 +197,7 @@ const AdminPanel: FunctionComponent = () => {
                                         >
                                             Çözülmedi
                                         </button>
-                                        <button 
-                                            className={`status-button in-progress-button ${complaint.status === 'In Progress' ? 'active' : ''}`} 
-                                            disabled={complaint.status === 'In Progress'}
-                                            onClick={() => handleStatusChange(index, 'In Progress')}
-                                        >
-                                            Çözülüyor
-                                        </button>
+                                        
                                         <button 
     className={`inceleme-button ${complaint.status === 'inceleme' ? 'active' : ''}`} 
     disabled={complaint.status === 'inceleme'}
