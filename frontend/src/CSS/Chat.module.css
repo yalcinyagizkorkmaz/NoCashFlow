@@ -16,7 +16,7 @@
 }
 
 .column {
-    padding: 20px;
+    
 }
 
 .column-1 {
@@ -31,6 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 20px;
 }
 
 .image {
@@ -38,6 +39,7 @@
     height: auto;
     float: left;
     margin-right: 20px;
+    margin-left:0px;
 }
 
 .rectangleDiv {
@@ -99,7 +101,7 @@
     padding: 5px; /* Boyutu küçültmek için padding azaltıldı */
     border-radius: 10px;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
     position: relative;
     display: flex;
     align-items: center;
