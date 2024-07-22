@@ -1,42 +1,54 @@
+//
+//  ChatMessageCell.swift
+//  AI BOT
+//
+//  Created by Ali Kaan Karagözgil on 22.07.2024.
+//
+
 import SwiftUI
 
+
+
 struct ChatMessageCell: View {
-    let message: Message
-    
+    @State var isfromUser = true
     var body: some View {
         HStack {
-            if message.isFromUser {
-                Spacer()
-                Text(message.content)
-                    .font(.subheadline)
-                Image(systemName: "person.fill")
-                    .foregroundStyle(.blue)
-                    .padding(.leading, 1)
-                    .font(.system(size: 25))
-                    .padding(2)
-            } else {
+            if !isfromUser {
                 HStack {
-                Image("team_icon")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                Text(message.content)
-                .font(.subheadline)
+                    Image("maskot")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                    ZStack {
+                        Rectangle()
+                            .foregroundStyle(.clear)
+                            .frame(width: 100, height: 100)
+                            .background(Color(red: 0.96, green: 0.96, blue: 0.97))
+                            .cornerRadius(16)
+                        Text("deneme mesajı")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            } else {
                 Spacer()
-                 }
-            .padding(.horizontal, 5)
-            .frame(maxWidth: .infinity, alignment: .leading)
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(.clear)
+                        .frame(width: 100, height: 100)
+                        .background(Color(red: 0.96, green: 0.96, blue: 0.97))
+                        .cornerRadius(16)
+                    Text("deneme mesajı")
+                        .font(.subheadline)
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
+        .padding()
     }
 }
 
-struct ChatMessageCell_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ChatMessageCell(message: Message(content: "This is a user message.", isFromUser: true))
-            ChatMessageCell(message: Message(content: "This is a bot response, displayed as normal text, similar to how ChatGPT responses appear.", isFromUser: false))
-        }
-    }
+#Preview {
+    ChatMessageCell()
 }

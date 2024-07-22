@@ -118,6 +118,7 @@ struct UserLogin: View {
                     }
                 }
             }
+            .navigationBarBackButtonHidden(true)
         }
     }
     
