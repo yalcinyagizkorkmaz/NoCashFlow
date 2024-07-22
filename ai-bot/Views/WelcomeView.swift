@@ -49,7 +49,7 @@ struct WelcomeView: View {
                         Button("Şikayet Oluştur") {
                             navigateToNextScreen = true
                         }
-                        .font(.custom("Open Sans", size: 25).weight(.semibold))
+                        .font(.title3)
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
                         .padding(.vertical, 14)
@@ -63,22 +63,14 @@ struct WelcomeView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToNextScreen) {
-                           NextView()
+                           UserLogin()
             }
         }
         .navigationBarHidden(true)
     }
 }
 
-struct NextView: View {
-    var body: some View {
-        VStack {
-            Text("Welcome to the Next View!")
-                .padding()
-        }
-        .navigationBarHidden(true)
-    }
-}
+
 #Preview {
     WelcomeView()
 }
