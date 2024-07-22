@@ -15,6 +15,9 @@ struct UserLogin: View {
     @State private var isFormValid = false
     @State private var navigateToNextScene = false
     
+    @State private var showAlert = false
+    @State private var errorDetails: ErrorDetails?
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -90,8 +93,10 @@ struct UserLogin: View {
                         .clipped(antialiased: true)
                         
                         Button(action: {
-                            if isFormValid {
+                            if validateForm() {
                                 navigateToNextScene = true
+                            } else {
+                                showAlert = true
                             }
                         }) {
                             Text("Şikayet Oluştur")
@@ -101,7 +106,11 @@ struct UserLogin: View {
                                 .cornerRadius(10)
                                 .shadow(color: .black.opacity(0.21), radius: 18.5, x: 0, y: 13)
                         }
-                        .disabled(!isFormValid)
+                        .alert("Hata", isPresented: $showAlert, presenting: errorDetails) { details in
+                            Button("Tamam", role: .cancel) {}
+                        } message: { details in
+                            Text(details.message)
+                        }
                         Spacer()
                     }
                     .navigationDestination(isPresented: $navigateToNextScene) {
@@ -110,6 +119,51 @@ struct UserLogin: View {
                 }
             }
         }
+    }
+    
+    private func validateForm() -> Bool {
+        var isValid = true
+        var messages: [String] = []
+        
+        if firstName.isEmpty {
+            messages.append("Adınızı giriniz.")
+            isValid = false
+        } else if firstName.contains(where: { $0.isNumber }) {
+            messages.append("Adınızda sayı bulunamaz.")
+            isValid = false
+        }
+        
+        if lastName.isEmpty {
+            messages.append("Soyadınızı giriniz.")
+            isValid = false
+        } else if lastName.contains(where: { $0.isNumber }) {
+            messages.append("Soyadınızda sayı bulunamaz.")
+            isValid = false
+        }
+        
+        if phoneNumber.isEmpty {
+            messages.append("Telefon numaranızı giriniz.")
+            isValid = false
+        } else if phoneNumber.count != 10 || !phoneNumber.allSatisfy({ $0.isNumber }) {
+            messages.append("Telefon numaranız 10 karakter ve sadece rakamlardan oluşmalıdır.")
+            isValid = false
+        }
+        
+        if idNumber.count != 11 {
+            messages.append("TC Kimlik numaranız 11 karakter olmalıdır.")
+            isValid = false
+        }
+
+        if !isFormValid {
+            messages.append("Lütfen verilerin işlenmesine izin verin.")
+            isValid = false
+        }
+        
+        if !isValid {
+            errorDetails = ErrorDetails(message: messages.joined(separator: "\n"))
+        }
+        
+        return isValid
     }
 }
 
