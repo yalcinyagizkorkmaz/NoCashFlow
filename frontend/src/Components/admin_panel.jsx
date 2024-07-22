@@ -24,9 +24,9 @@ const AdminPanel: FunctionComponent = () => {
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
     }, [navigate]);
-    const handleIncelemeChange = useCallback(() => {
-        navigate('/sikayet-detay');
-    }, [navigate]);
+    const handleIncelemeChange = (index: number) => {
+        navigate('/sikayet-detay', { state: { complaint: complaints[index] } });
+    };
 
     const [category, setCategory] = useState('all');
     const [isSortDropdownVisible, setIsSortDropdownVisible] = useState(false);
@@ -159,15 +159,7 @@ const AdminPanel: FunctionComponent = () => {
                         </svg>
                         <button type="button" onClick={handleReset}>Filtreyi Sıfırla</button>
                     </div>
-                    <div className="filter-item">
-                        <button type="button" onClick={toggleSortDropdown}>Sırala</button>
-                        {isSortDropdownVisible && (
-                            <div className="sort-dropdown">
-                                <button onClick={() => handleSort('asc')}>En Yeni</button>
-                                <button onClick={() => handleSort('desc')}>En Eski</button>
-                            </div>
-                        )}
-                    </div>
+                  
                 </form>
             </div>
          
@@ -217,12 +209,12 @@ const AdminPanel: FunctionComponent = () => {
                                             Çözülüyor
                                         </button>
                                         <button 
-                                            className={`inceleme-button ${complaint.status === 'inceleme' ? 'active' : ''}`} 
-                                            disabled={complaint.status === 'inceleme'}
-                                            onClick={() => handleIncelemeChange(index, 'inceleme')}
-                                        >
-                                           İnceleme
-                                        </button>
+    className={`inceleme-button ${complaint.status === 'inceleme' ? 'active' : ''}`} 
+    disabled={complaint.status === 'inceleme'}
+    onClick={() => handleIncelemeChange(index)}
+>
+    İnceleme
+</button>
                                     </div>
                                 </td>
                             </tr>
