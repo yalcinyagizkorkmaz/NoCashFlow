@@ -14,9 +14,9 @@ const Sikayet_detay = () => {
 
     const updateComplaintStatus = async (status) => {
         try {
-            const response = await axios.put(`/api/complaints/${complaint.id}`, { status });
+            const response = await axios.put(`/requests_response/${complaint.id}/status`, { status });
             if (response.status === 200) {
-                navigate('/admin-paneli'); // Navigate to '/admin-panel' route on success
+                navigate('/admin-panel'); // Navigate to '/admin-panel' route on success
             } else {
                 console.error('Failed to update complaint status:', response.status, response.statusText);
             }
@@ -24,6 +24,7 @@ const Sikayet_detay = () => {
             console.error('Error updating complaint status:', error);
         }
     };
+    
 
     const onMarkAsResolvedClick = () => {
         updateComplaintStatus('Çözüldü');

@@ -26,8 +26,14 @@ const AdminPanel: FunctionComponent = () => {
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
     }, [navigate]);
-    const handleIncelemeChange = (index: number) => {
-        navigate('/sikayet-detay', { state: { complaint: complaints[index] } });
+   
+    const handleIncelemeChange = (id) => {
+        const complaint = complaints.find(complaint => complaint.id === id);
+        if (complaint) {
+            navigate('/sikayet-detay', { state: { complaint } });
+        } else {
+            console.error('Complaint not found:', id);
+        }
     };
 
     const [category, setCategory] = useState('all');
@@ -60,24 +66,24 @@ const AdminPanel: FunctionComponent = () => {
 
     // Initialize complaints with random statuses
     const [complaints, setComplaints] = useState(() => [
-        { tc: '12345678901', name: 'Ali Veli', phone: '05326252838', complaintText: 'Hesap blokeli, işlemlerimi yapamıyorum.', date: '2024-07-21', category: 'Hesap/Kart Bloke Kaldırma', status: getRandomStatus() },
-        { tc: '09876543210', name: 'Ayşe Yılmaz', phone: '05551234567', complaintText: 'Kartımın limit artırımı yapılmadı.', date: '2024-07-20', category: 'Bireysel Kredi Kartları', status: getRandomStatus() },
-        { tc: '11223344556', name: 'Mehmet Öz', phone: '05443322119', complaintText: 'Mobil uygulama giriş sorunları yaşıyorum.', date: '2024-07-19', category: 'Mobil Deniz', status: getRandomStatus() },
-        { tc: '22334455667', name: 'Zeynep Korkmaz', phone: '05312345678', complaintText: 'Yanlış işlem ücretleri yansıtıldı.', date: '2024-07-18', category: 'Para Transferi', status: getRandomStatus() },
-        { tc: '33445566778', name: 'Kemal Yalçın', phone: '05432198765', complaintText: 'Yatırım hesabım güncellenmedi.', date: '2024-07-17', category: 'Yatırım İşlemleri', status: getRandomStatus() },
+        {id:1, tc: '12345678901', name: 'Ali Veli', phone: '05326252838', complaintText: 'Hesap blokeli, işlemlerimi yapamıyorum.', date: '2024-07-21', category: 'Hesap/Kart Bloke Kaldırma', status: getRandomStatus() },
+        {id:2,tc: '09876543210', name: 'Ayşe Yılmaz', phone: '05551234567', complaintText: 'Kartımın limit artırımı yapılmadı.', date: '2024-07-20', category: 'Bireysel Kredi Kartları', status: getRandomStatus() },
+        {id:3 ,tc: '11223344556', name: 'Mehmet Öz', phone: '05443322119', complaintText: 'Mobil uygulama giriş sorunları yaşıyorum.', date: '2024-07-19', category: 'Mobil Deniz', status: getRandomStatus() },
+        {id:4 ,tc: '22334455667', name: 'Zeynep Korkmaz', phone: '05312345678', complaintText: 'Yanlış işlem ücretleri yansıtıldı.', date: '2024-07-18', category: 'Para Transferi', status: getRandomStatus() },
+        {id:5 ,tc: '33445566778', name: 'Kemal Yalçın', phone: '05432198765', complaintText: 'Yatırım hesabım güncellenmedi.', date: '2024-07-17', category: 'Yatırım İşlemleri', status: getRandomStatus() },
         // Additional complaints for testing
-        { tc: '44556677889', name: 'Fatma Yurt', phone: '05553211223', complaintText: 'Mobil uygulamada sürekli hata alıyorum.', date: '2024-07-16', category: 'Mobil Deniz', status: getRandomStatus() },
-        { tc: '55667788990', name: 'Ahmet Kara', phone: '05443210987', complaintText: 'Kredi kartı ekstresi eksik.', date: '2024-07-15', category: 'Bireysel Kredi Kartları', status: getRandomStatus() },
-        { tc: '66778899001', name: 'Elif Yılmaz', phone: '05332145678', complaintText: 'Yanlış işlem yapıldı.', date: '2024-07-14', category: 'Para Transferi', status: getRandomStatus() },
-        { tc: '77889900112', name: 'Burak Çelik', phone: '05432123456', complaintText: 'Hesap blokesi kaldırılmadı.', date: '2024-07-13', category: 'Hesap/Kart Bloke Kaldırma', status: getRandomStatus() },
-        { tc: '88990011223', name: 'Seda Kaya', phone: '05554321098', complaintText: 'Eft işlemim iptal edilmedi.', date: '2024-07-12', category: 'EFT/Havale Teyit', status: getRandomStatus() },
-        { tc: '99001122334', name: 'Cemil Demir', phone: '05345678901', complaintText: 'Yanlış hesap bilgileri.', date: '2024-07-11', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
-        { tc: '00112233445', name: 'Ayşe Karaca', phone: '05456789012', complaintText: 'Konut sigortası hakkında bilgi eksik.', date: '2024-07-10', category: 'Konut Sigortası', status: getRandomStatus() },
-        { tc: '11223344556', name: 'Mehmet Özer', phone: '05367890123', complaintText: 'Yatırım hesabımın dökümanları kayboldu.', date: '2024-07-09', category: 'Yatırım İşlemleri', status: getRandomStatus() },
-        { tc: '22334455667', name: 'Gülşah Çelik', phone: '05567890123', complaintText: 'Bilgi sahtecilik şüphesi.', date: '2024-07-08', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
-        { tc: '33445566778', name: 'Ege Yurt', phone: '05467890123', complaintText: 'Eft işlemi onaylanmadı.', date: '2024-07-07', category: 'EFT/Havale Teyit', status: getRandomStatus() },
-        { tc: '44556677889', name: 'Aylin Demir', phone: '05378901234', complaintText: 'Kartım kayboldu.', date: '2024-07-06', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
-        { tc: '55667788990', name: 'Kadir Kaplan', phone: '05567890123', complaintText: 'Etkileşim Merkezi ile ilgili sorun.', date: '2024-07-05', category: 'İletişim Merkezi', status: getRandomStatus() }
+        {id:6 ,tc: '44556677889', name: 'Fatma Yurt', phone: '05553211223', complaintText: 'Mobil uygulamada sürekli hata alıyorum.', date: '2024-07-16', category: 'Mobil Deniz', status: getRandomStatus() },
+        {id:7 ,tc: '55667788990', name: 'Ahmet Kara', phone: '05443210987', complaintText: 'Kredi kartı ekstresi eksik.', date: '2024-07-15', category: 'Bireysel Kredi Kartları', status: getRandomStatus() },
+        {id:8 ,tc: '66778899001', name: 'Elif Yılmaz', phone: '05332145678', complaintText: 'Yanlış işlem yapıldı.', date: '2024-07-14', category: 'Para Transferi', status: getRandomStatus() },
+        {id:9 ,tc: '77889900112', name: 'Burak Çelik', phone: '05432123456', complaintText: 'Hesap blokesi kaldırılmadı.', date: '2024-07-13', category: 'Hesap/Kart Bloke Kaldırma', status: getRandomStatus() },
+        {id:10 ,tc: '88990011223', name: 'Seda Kaya', phone: '05554321098', complaintText: 'Eft işlemim iptal edilmedi.', date: '2024-07-12', category: 'EFT/Havale Teyit', status: getRandomStatus() },
+        {id:11 ,tc: '99001122334', name: 'Cemil Demir', phone: '05345678901', complaintText: 'Yanlış hesap bilgileri.', date: '2024-07-11', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
+        {id:12 ,tc: '00112233445', name: 'Ayşe Karaca', phone: '05456789012', complaintText: 'Konut sigortası hakkında bilgi eksik.', date: '2024-07-10', category: 'Konut Sigortası', status: getRandomStatus() },
+        {id:13 ,tc: '11223344556', name: 'Mehmet Özer', phone: '05367890123', complaintText: 'Yatırım hesabımın dökümanları kayboldu.', date: '2024-07-09', category: 'Yatırım İşlemleri', status: getRandomStatus() },
+        {id:14 ,tc: '22334455667', name: 'Gülşah Çelik', phone: '05567890123', complaintText: 'Bilgi sahtecilik şüphesi.', date: '2024-07-08', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
+        {id:15, tc: '33445566778', name: 'Ege Yurt', phone: '05467890123', complaintText: 'Eft işlemi onaylanmadı.', date: '2024-07-07', category: 'EFT/Havale Teyit', status: getRandomStatus() },
+        {id:16 ,tc: '44556677889', name: 'Aylin Demir', phone: '05378901234', complaintText: 'Kartım kayboldu.', date: '2024-07-06', category: 'Bilgi/Belge Sahtecilik / Kayıp', status: getRandomStatus() },
+        {id:17 ,tc: '55667788990', name: 'Kadir Kaplan', phone: '05567890123', complaintText: 'Etkileşim Merkezi ile ilgili sorun.', date: '2024-07-05', category: 'İletişim Merkezi', status: getRandomStatus() }
         // Add more complaints here as needed
     ]);
 
@@ -197,14 +203,8 @@ const AdminPanel: FunctionComponent = () => {
                                         >
                                             Çözülmedi
                                         </button>
-                                        
-                                        <button 
-    className={`inceleme-button ${complaint.status === 'inceleme' ? 'active' : ''}`} 
-    disabled={complaint.status === 'inceleme'}
-    onClick={() => handleIncelemeChange(index)}
->
-    İnceleme
-</button>
+                                        <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
+                                      
                                     </div>
                                 </td>
                             </tr>

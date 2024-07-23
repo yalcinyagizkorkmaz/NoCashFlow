@@ -35,7 +35,7 @@ function Chat() {
                 ],
             }, {
                 headers: {
-                    'Authorization':``,
+                    'Authorization':`Berarer`,
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
