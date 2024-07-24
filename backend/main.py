@@ -5,7 +5,7 @@ import os
 from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, validator
 from typing import List, Optional
 from openai import AzureOpenAI
 from requests.auth import HTTPBasicAuth
@@ -61,7 +61,7 @@ class Complaint(BaseModel):
     request_status: Optional[str]
     catagory: Optional[str] = Field(None, max_length=50)
 
-    @validator('request_date', pre=True, allow_reuse=True)
+    @field_validator('request_date', mode='before')
     def format_date(cls, value):
         if isinstance(value, date):
             return value.strftime('%Y-%m-%d')
@@ -73,11 +73,8 @@ class User(BaseModel):
     tc: str
     tel: str
 
-# FastAPI event to load the model at startup
-@app.on_event("startup")
-def load_model():
-    global model
-    model = SentenceTransformer('all-MiniLM-L6-v2')
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
 prompt= "Sen, banka müşterilerinin şikayetlerini belirli kategorilere göre sınıflandıran bir yapay zeka asistanısın. Müşterilerden gelen yorumları, aşağıda belirtilen kategorilere göre sınıflandıracaksın. Eğer sınıflandırma dışında bir taleple karşılaşırsan, 'Üzgünüm, sadece sınıflandırma işlemlerini uyguluyorum.' şeklinde yanıt vereceksin. Sınıflandırma Kategorileri: MobilDeniz, ATM, İnternet Bankacılığı, Bireysel Kredi Kartları, Debit Kartlar, Yatırım İşlemleri, Para Transferi, Vadeli Mevduat, Hesap Kart Bloke Kaldırma, EFL/HAVAL Teyit, Dolandırcılık/Bilgi Dışı Şüpheli Hesap Kart İşlemleri, Bilgi/Belge Sahteciliği/Kayıp, Konut Sigortası, Bireysel Hayat Sigortası, Ferdi Kaza Sigortası, İletişim Merkezi. Vereceğin cevap formatı sadece İlgili kategoriyi belirtmelisin başka hiçbir şey yazmamalısın."
