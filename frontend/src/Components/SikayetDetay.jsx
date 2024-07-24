@@ -17,10 +17,10 @@ const Sikayet_detay = () => {
             console.log(`Updating complaint status to: ${newStatus}`);
             const response = await axios.put(`http://localhost:5000/requests_response/${complaint.id}/status`, { status: newStatus });
             console.log('Response:', response); // Log the full response for debugging
-
+    
             if (response.status === 200) {
                 // Pass updated complaint data to the admin panel
-                navigate('/admin-panel', { state: { updatedComplaint: { ...complaint, status: newStatus } } });
+                navigate('/admin-panel', { state: { updatedComplaint: { id: complaint.id, status: newStatus } } });
             } else {
                 console.error('Failed to update complaint status:', response.status, response.statusText);
             }

@@ -14,17 +14,24 @@ from pyodbc import IntegrityError
 import logging
 from uuid import uuid4
 from enum import Enum
+import torch
+from torch import Tensor
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
-#Get the API KEY 
-os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b" 
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://rgacademy3oai.openai.azure.com/" 
-api_key = os.getenv("AZURE_OPENAI_KEY") 
-client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/", 
-                      api_key = os.getenv("AZURE_OPENAI_KEY"), 
+#Get the API KEY
+os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b"
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://rgacademy3oai.openai.azure.com/"
+api_key = os.getenv("AZURE_OPENAI_KEY")
+client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/",
+                      api_key = os.getenv("AZURE_OPENAI_KEY"),
                       api_version = "2024-02-15-preview", timeout=30,
 )
 
 app=FastAPI()
+
+model = None
 
 
 
@@ -37,7 +44,7 @@ app=FastAPI()
 #    raise Exception('This app is only for Windows OS')
 
 # Set Azure SQL connection string directly in the script
-conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user3;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
+conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user1;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 
 # Veritabanı bağlantısı oluşturma
 conn = pyodbc.connect(conn_str)
@@ -66,66 +73,70 @@ class User(BaseModel):
     tc: str
     tel: str
 
+# FastAPI event to load the model at startup
+@app.on_event("startup")
+def load_model():
+    global model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-def read_json_file(file_path): 
+
+prompt= "Sen, banka müşterilerinin şikayetlerini belirli kategorilere göre sınıflandıran bir yapay zeka asistanısın. Müşterilerden gelen yorumları, aşağıda belirtilen kategorilere göre sınıflandıracaksın. Eğer sınıflandırma dışında bir taleple karşılaşırsan, 'Üzgünüm, sadece sınıflandırma işlemlerini uyguluyorum.' şeklinde yanıt vereceksin. Sınıflandırma Kategorileri: MobilDeniz, ATM, İnternet Bankacılığı, Bireysel Kredi Kartları, Debit Kartlar, Yatırım İşlemleri, Para Transferi, Vadeli Mevduat, Hesap Kart Bloke Kaldırma, EFL/HAVAL Teyit, Dolandırcılık/Bilgi Dışı Şüpheli Hesap Kart İşlemleri, Bilgi/Belge Sahteciliği/Kayıp, Konut Sigortası, Bireysel Hayat Sigortası, Ferdi Kaza Sigortası, İletişim Merkezi. Vereceğin cevap formatı sadece İlgili kategoriyi belirtmelisin başka hiçbir şey yazmamalısın."
+
+
+
+def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file) 
+        data = json.load(file)
         return data['messages']
-    
+   
+def semantic_search(query, messages, model, top_k=20):
+    content_list = [msg['content'] for msg in messages]
+    query_embedding = model.encode([query])
+    content_embeddings = model.encode(content_list)
+   
+    similarities = cosine_similarity(query_embedding, content_embeddings)[0]
+    top_indices = np.argsort(similarities)[-top_k:][::-1]
+   
+    return [messages[i] for i in top_indices]
+   
 file_path = 'few_shots.json'
 message_text = read_json_file(file_path)
 
    
 # Adjust the endpoint to fetch and return all required data:
-@app.post("/chat/", response_model=Complaint)
-async def chat_with_openai(user_input: str, user_id: int):
-    cursor = conn.cursor()
-    # Fetching user details along with telephone
-    cursor.execute('SELECT tc, ad, soyad, tel FROM dbo.kullanici_bilgileri WHERE user_id = ?', user_id)
-    user_details = cursor.fetchone()
+class UserQuery(BaseModel):
+    query: str
 
-    if not user_details:
-        raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
-   
-    tc, ad, soyad, tel = user_details
-
-    message_text.append({"role": "user", "content": user_input})
-
-    # Assuming hypothetical API call setup
-    completion = client.chat.completions.create(
-        model="gpt-4o",
-        messages=message_text,
-        max_tokens=4096,
-        temperature=0.7,
-        top_p=0.95,
-        stop=None
-    )
-    ai_response = completion.choices[0].message.content.strip()
-
+@app.post("/classify-query/")
+async def classify_query(user_query: UserQuery):
     try:
-        cursor.execute('''
-            INSERT INTO dbo.requests_response (tc, ad, soyad, tel, request, request_date, request_status, catagory, user_id)
-            VALUES (?, ?, ?, ?, ?, GETDATE(), 'cozulmedi', ?, ?)
-        ''', (tc, ad, soyad, tel, user_input, ai_response, user_id))
-        conn.commit()
-        request_id = cursor.execute('SELECT @@IDENTITY AS id').fetchval()
-    except Exception as e:
-        conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Şikayet eklenemedi: {str(e)}")
+        # Load messages and model (this should ideally be loaded once, consider using app startup events)
+        file_path = 'few_shots.json'
+        all_messages = read_json_file(file_path)
+       
 
-    return {
-        "id": request_id,
-        "user_id": user_id,
-        "tc": tc,
-        "ad": ad,
-        "soyad": soyad,
-        "tel": tel,
-        "request": user_input,
-        "request_date": date.today(),
-        "request_status": 'cozulmedi',
-        "catagory": ai_response
-    }
-   
+        # Perform semantic search
+        relevant_messages = semantic_search(user_query.query, all_messages, model)
+       
+        # Prepare messages for Azure OpenAI
+        message_text = [{"role": "assistant", "content": prompt}] + relevant_messages + [{"role": "user", "content": user_query.query}]
+       
+        # Call Azure OpenAI API
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=message_text,
+            max_tokens=4096,
+            temperature=0.7,
+            top_p=0.95,
+            stop=None
+        )
+       
+        # Extract the assistant's response
+        assistant_response = completion.choices[0].message.content
+        return {"response": assistant_response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+ 
 
 
 @app.get("/")
@@ -225,7 +236,7 @@ async def get_kullanici_bilgileri():
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+   
 @app.post("/kullanici_bilgileri", status_code=status.HTTP_201_CREATED)
 async def create_kullanici_bilgileri(user: User):
     try:
@@ -258,7 +269,7 @@ async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: s
         return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-  
+ 
 
 @app.get("/requests_response_sorted/recent_to_old", response_model=List[Complaint])
 async def get_requests_response_sorted():
@@ -271,7 +282,7 @@ async def get_requests_response_sorted():
         '''
         cursor.execute(query)
         rows = cursor.fetchall()
-        
+       
         result = [{
             'id': row.id,
             'user_id': row.user_id,
@@ -287,7 +298,7 @@ async def get_requests_response_sorted():
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
-    
+   
 @app.get("/requests_response_sorted/old_to_rec", response_model=List[Complaint])
 async def requests_response_sorted():
     try:
@@ -299,7 +310,7 @@ async def requests_response_sorted():
         '''
         cursor.execute(query)
         rows = cursor.fetchall()
-        
+       
         result = [{
             'id': row.id,
             'user_id': row.user_id,
@@ -314,10 +325,6 @@ async def requests_response_sorted():
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
-    
-
-
-
 
 # updating the status
 @app.put("/requests_response/{id}/status")
@@ -341,11 +348,11 @@ async def update_request_status(id: int, status: str = Body(..., embed=True)):
         return JSONResponse(content={"message": "Şikayet durumu güncellendi"})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+   
 
 # kategori
 class CategoryEnum(str, Enum):
-    mobil_deniz = "Mobil Deniz"
+    mobil_deniz = "MobilDeniz"
     bireysel_kredi_kartlari = "Bireysel Kredi Kartları"
     debit_kartlar = "Debit Kartlar"
     yatirim_islemleri = "Yatırım İşlemleri"
@@ -365,10 +372,10 @@ class CategoryEnum(str, Enum):
 @app.get("/requests_response/by_category", response_model=List[Complaint])
 async def get_complaints_by_category(category: CategoryEnum = Query(..., description="Görmek istediğiniz kategoriyi seçiniz.")):
     try:
-        
+       
         cursor = conn.cursor()
         query = '''
-            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory
+            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
             FROM dbo.requests_response
             WHERE catagory = ?
             ORDER BY request_date DESC
@@ -389,7 +396,8 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
             request=row.request,
             request_date=row.request_date,
             request_status=row.request_status,
-            catagory=row.catagory
+            catagory=row.catagory,
+            tel = row.tel
         ) for row in rows]
         return result
     except Exception as e:
