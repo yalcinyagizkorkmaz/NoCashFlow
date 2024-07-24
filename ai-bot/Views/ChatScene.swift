@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ChatScene: View {
     
-    @State private var message = ""
+    @State private var messageText = ""
     @State private var messages: [Message] = [Message(content: "Hello!", isFromUser: false)]
     
-    var body: some View {
+        var body: some View {
         VStack() {
             ZStack {
                 Image("Rectangle 10")
@@ -44,41 +44,37 @@ struct ChatScene: View {
             .frame(height: 0)
             
             ScrollViewReader { proxy in
-            ScrollView {
-            VStack {
-        ForEach(messages) { message in
-            ChatMessageCell(isFromUser: message.isFromUser, message: message.content)
+                ScrollView {
+                    VStack {
+                        ForEach(messages) { message in
+                            ChatMessageCell(isFromUser: message.isFromUser, message: message.content)
+                        }
+                        .id(messages.last?.id) // Ensure the last message has an id
+                    }
+                    .onChange(of: messages) { _ in
+                        if let lastMessageId = messages.last?.id {
+                            withAnimation {
+                                proxy.scrollTo(lastMessageId, anchor: .bottom)
+                            }
+                        }
+                    }
                 }
-                .id(messages.last?.id) // Ensure the last message has an id
             }
-            .onChange(of: messages) { _ in
-                if let lastMessageId = messages.last?.id {
-                    withAnimation {
-                    proxy.scrollTo(lastMessageId, anchor: .bottom)
-                                       }
-                                   }
-                               }
-                           }
-                       }
             .frame(maxHeight:.infinity)
             .padding(.top, 60)
-
+            
             ZStack {
                 Image("Rectangle 11")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
                 HStack {
-                    TextField("Adınızı giriniz", text: $message)
+                    TextField("Mesajınızı giriniz", text: $messageText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.leading, 1)
                     Button("Gönder") {
-                    let newMessage = Message(content: message, isFromUser: true)
-                    messages.append(newMessage)
-                    message = ""
-                    let responseMessage = Message(content: "Response to \(newMessage.content)", isFromUser: false)
-                        messages.append(responseMessage)
-                                        }
+                        sendMessage()
+                    }
                     .foregroundColor(.blue)
                     .padding(.horizontal, 1)
                 }
@@ -88,7 +84,25 @@ struct ChatScene: View {
         }
         .navigationBarBackButtonHidden(true)
     }
+    private func sendMessage() {
+           let userMessage = Message(content: messageText, isFromUser: true)
+           messages.append(userMessage)
+           messageText = ""
+           
+           openAIService.generateChatResponse(prompt: userMessage.content) { response in
+               DispatchQueue.main.async {
+                   if let response = response {
+                       let responseMessage = Message(content: response, isFromUser: false)
+                       messages.append(responseMessage)
+                   } else {
+                       messages.append(Message(content: "Error generating response.", isFromUser: false))
+                }
+            }
+        }
+    }
 }
+
+
 #Preview {
     ChatScene()
 }
