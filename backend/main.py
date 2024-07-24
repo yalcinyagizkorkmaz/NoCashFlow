@@ -324,3 +324,93 @@ async def requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
+
+# updating the status
+@app.put("/requests_response/{id}/status")
+async def update_request_status(id: int, status: str = Body(..., embed=True)):
+    valid_statuses = ['cozuldu', 'cozuluyor', 'cozulmedi']
+    if status not in valid_statuses:
+        raise HTTPException(status_code=400, detail="İşlem geçersiz.")
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE dbo.requests_response
+            SET request_status = ?
+            WHERE id = ?
+        ''', status, id)
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Şikayet bulunamadı")
+
+        return JSONResponse(content={"message": "Şikayet durumu güncellendi"})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+   
+
+# kategori
+class CategoryEnum(str, Enum):
+    mobil_deniz = "MobilDeniz"
+    bireysel_kredi_kartlari = "Bireysel Kredi Kartları"
+    debit_kartlar = "Debit Kartlar"
+    yatirim_islemleri = "Yatırım İşlemleri"
+    dijital_bankacilik = "ATM"
+    dij_bankacilik = "İnternet Bankacılığı"
+    para_transferi = "Para Transferi"
+    vadeli_mevduat = "Vadeli Mevduat"
+    hesap_kart_bloke_kaldirma = "Hesap/Kart Bloke Kaldırma"
+    fraud = "EFT/ Havale Teyit"
+    dolandiricilik_bilgi_disi_suphe = "Dolandırıcılık-Bilgi Dışı Şüph. Hesap-Kart İşl."
+    bilgi_belge_sahtecilik_kayip = "Bilgi/Belge Sahtecilik/Kayıp"
+    konut_sigortasi = "Konut Sigortası"
+    bireysel_kredi_hayat_sigortasi = "Bireysel Kredi Hayat Sigortası"
+    ferdi_kaza = "Ferdi Kaza Sigortası"
+    iletisim_merkezi = "İletişim Merkezi"
+
+@app.get("/requests_response/by_category", response_model=List[Complaint])
+async def get_complaints_by_category(category: CategoryEnum = Query(..., description="Görmek istediğiniz kategoriyi seçiniz.")):
+    try:
+       
+        cursor = conn.cursor()
+        query = '''
+            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
+            FROM dbo.requests_response
+            WHERE catagory = ?
+            ORDER BY request_date DESC
+        '''
+        cursor.execute(query, category.value)
+        rows = cursor.fetchall()
+        conn.close()
+
+        if not rows:
+            raise HTTPException(status_code=404, detail="Bu kategoride şikayet bulunamadı")
+
+        result = [Complaint(
+            id=row.id,
+            user_id=row.user_id,
+            tc=row.tc,
+            ad=row.ad,
+            soyad=row.soyad,
+            request=row.request,
+            request_date=row.request_date,
+            request_status=row.request_status,
+            catagory=row.catagory,
+            tel = row.tel
+        ) for row in rows]
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Şikayetler gösterilemiyor: {str(e)}")
+
+ 
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='127.0.0.1', port=8002)
