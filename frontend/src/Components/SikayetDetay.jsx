@@ -6,25 +6,28 @@ import "../CSS/sikayet_detay.css";
 const Sikayet_detay = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const complaint = location.state?.complaint;
+    const { complaint } = location.state;
 
     const onButtonSikayetDetayCikisClick = () => {
         navigate('/admin-giris'); // Navigate to '/admin-giris' route on button click
     };
 
-    const updateComplaintStatus = async (status) => {
+    const updateComplaintStatus = async (newStatus) => {
         try {
-            const response = await axios.put(`/requests_response/${complaint.id}/status`, { status });
+            console.log(`Updating complaint status to: ${newStatus}`);
+            const response = await axios.put(`http://localhost:5000/requests_response/${complaint.id}/status`, { status: newStatus });
+            console.log('Response:', response); // Log the full response for debugging
+
             if (response.status === 200) {
-                navigate('/admin-panel'); // Navigate to '/admin-panel' route on success
+                // Pass updated complaint data to the admin panel
+                navigate('/admin-panel', { state: { updatedComplaint: { ...complaint, status: newStatus } } });
             } else {
                 console.error('Failed to update complaint status:', response.status, response.statusText);
             }
         } catch (error) {
-            console.error('Error updating complaint status:', error);
+            console.error('Error updating complaint status:', error.response ? error.response.data : error.message);
         }
     };
-    
 
     const onMarkAsResolvedClick = () => {
         updateComplaintStatus('Çözüldü');

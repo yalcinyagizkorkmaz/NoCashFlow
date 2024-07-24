@@ -22,6 +22,7 @@ const sortComplaintsByDate = (complaints: any[], order: string) => {
 const AdminPanel: FunctionComponent = () => {
     
     
+    
     const navigate = useNavigate();
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
@@ -90,10 +91,19 @@ const AdminPanel: FunctionComponent = () => {
     const handleStatusChange = (index: number, newStatus: string) => {
         setComplaints(prevComplaints => {
             const updatedComplaints = [...prevComplaints];
-            updatedComplaints[index].status = newStatus;
+            const complaint = updatedComplaints[index];
+            
+            // Prevent setting status to 'Çözülmedi' again if already changed
+            if (complaint.status === 'Çözülmedi' && newStatus !== 'Çözülmedi') {
+                complaint.status = newStatus;
+            } else if (complaint.status !== 'Çözülmedi') {
+                complaint.status = newStatus;
+            }
+            
             return updatedComplaints;
         });
     };
+    
 
     // Filter complaints based on selected category
     const filteredComplaints = complaints.filter(complaint => 
@@ -194,19 +204,32 @@ const AdminPanel: FunctionComponent = () => {
                                 <td>{complaint.date}</td>
                                 <td>{complaint.category}</td>
                                 <td>
-                                    <div className="status-buttons">
-                                       
-                                        <button 
-                                            className={`status-button unresolved-button ${complaint.status === 'Open' ? 'active' : ''}`} 
-                                            disabled={complaint.status === 'Open'}
-                                            onClick={() => handleStatusChange(index, 'Open')}
-                                        >
-                                            Çözülmedi
-                                        </button>
-                                        <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
-                                      
-                                    </div>
-                                </td>
+    <div className="status-buttons">
+        <button 
+            className={`status-button unresolved-button ${complaint.status === 'Çözülmedi' ? 'active' : ''}`} 
+            disabled={complaint.status === 'Çözülmedi'}
+            onClick={() => handleStatusChange(index, 'Çözülmedi')}
+        >
+            Çözülmedi
+        </button>
+        <button 
+            className={`status-button ${complaint.status === 'In Progress' ? 'active' : ''}`} 
+            disabled={complaint.status === 'Çözülmedi'}
+            onClick={() => handleStatusChange(index, 'In Progress')}
+        >
+            Çözülüyor
+        </button>
+        <button 
+            className={`status-button ${complaint.status === 'Closed' ? 'active' : ''}`} 
+            disabled={complaint.status === 'Çözülmedi'}
+            onClick={() => handleStatusChange(index, 'Closed')}
+        >
+            Çözüldü
+        </button>
+        <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
+    </div>
+</td>
+
                             </tr>
                         ))}
                     </tbody>
