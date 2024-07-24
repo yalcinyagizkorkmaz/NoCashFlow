@@ -5,7 +5,7 @@ import "../CSS/header.css";
 
 // Helper function to get a random status
 const getRandomStatus = () => {
-    const statuses = ['Open', 'In Progress', 'Closed'];
+    const statuses = ['Çözülmedi', 'Çözülüyor', 'Çözüldü'];
     const randomIndex = Math.floor(Math.random() * statuses.length);
     return statuses[randomIndex];
 };
@@ -100,9 +100,13 @@ const AdminPanel: FunctionComponent = () => {
                 complaint.status = newStatus;
             }
             
+            // Update the complaint status in the backend
+            updatedComplaints(complaint.id, newStatus);
+    
             return updatedComplaints;
         });
     };
+            
     
 
     // Filter complaints based on selected category
@@ -213,22 +217,23 @@ const AdminPanel: FunctionComponent = () => {
             Çözülmedi
         </button>
         <button 
-            className={`status-button ${complaint.status === 'In Progress' ? 'active' : ''}`} 
+            className={`status-button ${complaint.status === 'Çözülüyor' ? 'active' : ''}`} 
             disabled={complaint.status === 'Çözülmedi'}
-            onClick={() => handleStatusChange(index, 'In Progress')}
+            onClick={() => handleStatusChange(index, 'Çözülüyor')}
         >
             Çözülüyor
         </button>
         <button 
-            className={`status-button ${complaint.status === 'Closed' ? 'active' : ''}`} 
+            className={`status-button ${complaint.status === 'Çözüldü' ? 'active' : ''}`} 
             disabled={complaint.status === 'Çözülmedi'}
-            onClick={() => handleStatusChange(index, 'Closed')}
+            onClick={() => handleStatusChange(index, 'Çözüldü')}
         >
             Çözüldü
         </button>
         <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
     </div>
 </td>
+
 
                             </tr>
                         ))}
