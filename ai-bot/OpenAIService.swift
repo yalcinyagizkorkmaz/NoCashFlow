@@ -15,14 +15,14 @@ class OpenAIService {
     }
 
     func generateChatResponse(prompt: String, completion: @escaping (String?) -> Void) {
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        let url = URL(string: "http://10.3.2.5:8000/chat-completion/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
         let body: [String: Any] = [
-            "model": "gpt-3.5-turbo-0125",
+            "model": "gpt-4o",
             "messages": [
                 ["role": "system", "content": "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly."],
                 ["role": "user", "content": prompt]
@@ -43,11 +43,13 @@ class OpenAIService {
             
             do {
                 if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let responses = jsonObject["choices"] as? [[String: Any]],
-                   let firstResponse = responses.first,
-                   let text = firstResponse["message"] as? [String: Any],
-                   let content = text["content"] as? String {
+                   let choices = jsonObject["choices"] as? [[String: Any]],
+                   let firstChoice = choices.first,
+                   let message = firstChoice["message"] as? [String: Any],
+                   let content = message["content"] as? String {
                     completion(content.trimmingCharacters(in: .whitespacesAndNewlines))
+                } else {
+                    completion(nil)
                 }
             } catch {
                 print("Failed to decode JSON: \(error)")
@@ -57,4 +59,3 @@ class OpenAIService {
         task.resume()
     }
 }
-
