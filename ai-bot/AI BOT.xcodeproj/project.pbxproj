@@ -7,28 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		693CE0EE2C4E7B4C001A8A8C /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693CE0ED2C4E7B4C001A8A8C /* ChatMessageCell.swift */; };
 		6972FCBC2C37E96400CCF341 /* OpenAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6972FCBB2C37E96400CCF341 /* OpenAIService.swift */; };
 		6972FCBE2C37EAF500CCF341 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6972FCBD2C37EAF500CCF341 /* Message.swift */; };
-		6972FCC02C37EB2900CCF341 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6972FCBF2C37EB2900CCF341 /* ChatMessageCell.swift */; };
 		6987F8D12C4A76F5004511BA /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6987F8D02C4A76F5004511BA /* WelcomeView.swift */; };
+		6991BF582C4E5ACB009EF2A3 /* ChatScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6991BF572C4E5ACB009EF2A3 /* ChatScene.swift */; };
+		6991BF5A2C4E6783009EF2A3 /* ErrorDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6991BF592C4E6783009EF2A3 /* ErrorDetails.swift */; };
 		69A1ED382C493DE1005C192F /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A1ED372C493DE1005C192F /* LaunchScreen.swift */; };
 		69B8AAC22C4808CD0069E719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69B8AABC2C4808CD0069E719 /* Assets.xcassets */; };
 		69B8AAC32C4808CD0069E719 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69B8AABD2C4808CD0069E719 /* Preview Assets.xcassets */; };
 		69B8AAC42C4808CD0069E719 /* AI_BOTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */; };
 		69B8AAC52C4808CD0069E719 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B8AAC02C4808CD0069E719 /* ContentView.swift */; };
+		69C2899A2C4E251F008ED4C3 /* UserLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C289992C4E251F008ED4C3 /* UserLogin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		693CE0ED2C4E7B4C001A8A8C /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		6972FCAA2C37E8BC00CCF341 /* AI BOT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI BOT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6972FCBB2C37E96400CCF341 /* OpenAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIService.swift; sourceTree = "<group>"; };
 		6972FCBD2C37EAF500CCF341 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		6972FCBF2C37EB2900CCF341 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		6987F8D02C4A76F5004511BA /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		6991BF572C4E5ACB009EF2A3 /* ChatScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScene.swift; sourceTree = "<group>"; };
+		6991BF592C4E6783009EF2A3 /* ErrorDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDetails.swift; sourceTree = "<group>"; };
 		69A1ED372C493DE1005C192F /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
 		69B8AABC2C4808CD0069E719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		69B8AABD2C4808CD0069E719 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AI_BOTApp.swift; sourceTree = "<group>"; };
 		69B8AAC02C4808CD0069E719 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		69C289992C4E251F008ED4C3 /* UserLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLogin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,10 +51,11 @@
 		6972FCA12C37E8BC00CCF341 = {
 			isa = PBXGroup;
 			children = (
-				6972FCBF2C37EB2900CCF341 /* ChatMessageCell.swift */,
 				6972FCBD2C37EAF500CCF341 /* Message.swift */,
+				6991BF592C4E6783009EF2A3 /* ErrorDetails.swift */,
 				6972FCBB2C37E96400CCF341 /* OpenAIService.swift */,
 				69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */,
+				693CE0ED2C4E7B4C001A8A8C /* ChatMessageCell.swift */,
 				69A1ED362C493DD1005C192F /* Views */,
 				69B8AABC2C4808CD0069E719 /* Assets.xcassets */,
 				69B8AABE2C4808CD0069E719 /* Preview Content */,
@@ -70,6 +77,8 @@
 				69B8AAC02C4808CD0069E719 /* ContentView.swift */,
 				69A1ED372C493DE1005C192F /* LaunchScreen.swift */,
 				6987F8D02C4A76F5004511BA /* WelcomeView.swift */,
+				69C289992C4E251F008ED4C3 /* UserLogin.swift */,
+				6991BF572C4E5ACB009EF2A3 /* ChatScene.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -158,9 +167,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6972FCC02C37EB2900CCF341 /* ChatMessageCell.swift in Sources */,
+				6991BF582C4E5ACB009EF2A3 /* ChatScene.swift in Sources */,
+				693CE0EE2C4E7B4C001A8A8C /* ChatMessageCell.swift in Sources */,
 				69B8AAC52C4808CD0069E719 /* ContentView.swift in Sources */,
+				69C2899A2C4E251F008ED4C3 /* UserLogin.swift in Sources */,
 				69A1ED382C493DE1005C192F /* LaunchScreen.swift in Sources */,
+				6991BF5A2C4E6783009EF2A3 /* ErrorDetails.swift in Sources */,
 				69B8AAC42C4808CD0069E719 /* AI_BOTApp.swift in Sources */,
 				6972FCBE2C37EAF500CCF341 /* Message.swift in Sources */,
 				6972FCBC2C37E96400CCF341 /* OpenAIService.swift in Sources */,

@@ -5,7 +5,7 @@
 //  Created by Ali Kaan Karagözgil on 5.07.2024.
 //
 
-import SwiftUI
+/*import SwiftUI
 
 struct ContentView: View {
     @State private var messageText = ""
@@ -71,3 +71,4 @@ struct ContentView: View {
            ContentView()
        }
    }
+*/

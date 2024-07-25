@@ -1,57 +1,88 @@
-import React, { useEffect, useState ,useCallback} from 'react';
-import "../CSS/admin_panel.css";
-import "../CSS/header.css";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import "../CSS/sikayet_detay.css";
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const Sikayet_detay = () => {
+    const location = useLocation();
     const navigate = useNavigate();
-    const onButtonSikayetDetayCikisClick = useCallback(() => {
-        navigate('/admin-giris'); // Navigate to '/kullanici-bilgileri' route on button click
-      }, [navigate])
+    const { complaint } = location.state;
+
+    const onButtonSikayetDetayCikisClick = () => {
+        navigate('/admin-giris'); // Navigate to '/admin-giris' route on button click
+    };
+
+    const updateComplaintStatus = async (newStatus) => {
+        try {
+            console.log(`Updating complaint status to: ${newStatus}`);
+            const response = await axios.put(`http://localhost:5000/requests_response/${complaint.id}/status`, { status: newStatus });
+            console.log('Response:', response); // Log the full response for debugging
+    
+            if (response.status === 200) {
+                // Pass updated complaint data to the admin panel
+                navigate('/admin-panel', { state: { updatedComplaint: { id: complaint.id, status: newStatus } } });
+            } else {
+                console.error('Failed to update complaint status:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating complaint status:', error.response ? error.response.data : error.message);
+        }
+    };
+
+    const onMarkAsResolvedClick = () => {
+        updateComplaintStatus('Çözüldü');
+    };
+
+    const onMarkAsResolvingClick = () => {
+        updateComplaintStatus('Çözülüyor');
+    };
+
+    if (!complaint) {
+        return <div>Complaint details not found.</div>;
+    }
+
     return (
         <div>
             <div className="header">
-
                 <div className="logo">
                     <img src="/beyaz.png" alt="logo" />
                 </div>
                 <div className="header-right">
                     <img src="/Inset.png" alt="divider" className="divider" />
-                    <span className="username">Burak Berk Aydın</span>
-                    <button className="logout-button" onClick={onButtonSikayetDetayCikisClick} >Çıkış Yap</button>
+                    <span className="username">{localStorage.getItem('adminUsername') || 'Admin'}</span>
+                    <button className="logout-button" onClick={onButtonSikayetDetayCikisClick}>Çıkış Yap</button>
                 </div>
             </div>
-            <br></br>
+            <br />
             <div className="content">
-                <br></br>
+                <br />
                 <h1>Şikayet Detay</h1>
-                <br></br>
-                <div className="divider2" ></div>
-                <br></br>
+                <br />
+                <div className="divider2"></div>
+                <br />
                 <h2>Müşteri Bilgileri</h2>
-                <br></br>
-                <p>İsim: <strong>Döndü Dönmez</strong></p>
-                <p>Telefon Numarası: <strong>05555555555</strong></p>
-                <p>TC: <strong>111111111111</strong></p>
-                <p>Şikayet Kategorisi: <strong>ATM</strong></p>
-                <p>Tarih: <strong>17 Temmuz 2024</strong></p>
-
-                <br></br>
-                <div className="divider2" ></div>
-                <br></br>
+                <br />
+                <p>İsim: <strong>{complaint.name}</strong></p>
+                <p>Telefon Numarası: <strong>{complaint.phone}</strong></p>
+                <p>TC: <strong>{complaint.tc}</strong></p>
+                <p>Şikayet Kategorisi: <strong>{complaint.category}</strong></p>
+                <p>Tarih: <strong>{complaint.date}</strong></p>
+                <br />
+                <div className="divider2"></div>
+                <br />
                 <h2>Şikayet Metni</h2>
-                <br></br>
-                <p>18:13:50 tarihinde G2626 atmsinde</p>
-                <br></br>
-                <div className="divider2" ></div>
-                <br></br>
+                <br />
+                <p>{complaint.complaintText}</p>
+                <br />
+                <div className="divider2"></div>
+                <br />
             </div>
             <div className="container">
-                <button className="cozuldu">Çözüldü olarak işaretle</button>
-                <button className="cozuluyor">Çözülüyor olarak işaretle</button>
-        </div>
+                <button className="cozuldu" onClick={onMarkAsResolvedClick}>Çözüldü olarak işaretle</button>
+                <button className="cozuluyor" onClick={onMarkAsResolvingClick}>Çözülüyor olarak işaretle</button>
+            </div>
         </div>
     );
-}
+};
+
 export default Sikayet_detay;
