@@ -5,7 +5,7 @@ import os
 from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, validator
 from typing import List, Optional
 from openai import AzureOpenAI
 from requests.auth import HTTPBasicAuth
@@ -19,6 +19,7 @@ from torch import Tensor
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from fastapi.middleware.cors import CORSMiddleware
 
 #Get the API KEY
 os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b"
@@ -30,6 +31,15 @@ client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/
 )
 
 app=FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3001"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
 
 model = None
 
@@ -61,7 +71,7 @@ class Complaint(BaseModel):
     request_status: Optional[str]
     catagory: Optional[str] = Field(None, max_length=50)
 
-    @validator('request_date', pre=True, allow_reuse=True)
+    @field_validator('request_date', mode='before')
     def format_date(cls, value):
         if isinstance(value, date):
             return value.strftime('%Y-%m-%d')
@@ -73,11 +83,8 @@ class User(BaseModel):
     tc: str
     tel: str
 
-# FastAPI event to load the model at startup
-@app.on_event("startup")
-def load_model():
-    global model
-    model = SentenceTransformer('all-MiniLM-L6-v2')
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
 prompt= "Sen, banka müşterilerinin şikayetlerini belirli kategorilere göre sınıflandıran bir yapay zeka asistanısın. Müşterilerden gelen yorumları, aşağıda belirtilen kategorilere göre sınıflandıracaksın. Eğer sınıflandırma dışında bir taleple karşılaşırsan, 'Üzgünüm, sadece sınıflandırma işlemlerini uyguluyorum.' şeklinde yanıt vereceksin. Sınıflandırma Kategorileri: MobilDeniz, ATM, İnternet Bankacılığı, Bireysel Kredi Kartları, Debit Kartlar, Yatırım İşlemleri, Para Transferi, Vadeli Mevduat, Hesap Kart Bloke Kaldırma, EFL/HAVAL Teyit, Dolandırcılık/Bilgi Dışı Şüpheli Hesap Kart İşlemleri, Bilgi/Belge Sahteciliği/Kayıp, Konut Sigortası, Bireysel Hayat Sigortası, Ferdi Kaza Sigortası, İletişim Merkezi. Vereceğin cevap formatı sadece İlgili kategoriyi belirtmelisin başka hiçbir şey yazmamalısın."
@@ -99,7 +106,7 @@ def semantic_search(query, messages, model, top_k=20):
    
     return [messages[i] for i in top_indices]
    
-file_path = 'few_shots.json'
+file_path = 'few_shot.json'
 message_text = read_json_file(file_path)
 
    
@@ -111,7 +118,7 @@ class UserQuery(BaseModel):
 async def classify_query(user_query: UserQuery):
     try:
         # Load messages and model (this should ideally be loaded once, consider using app startup events)
-        file_path = 'few_shots.json'
+        file_path = 'few_shot.json'
         all_messages = read_json_file(file_path)
        
 
