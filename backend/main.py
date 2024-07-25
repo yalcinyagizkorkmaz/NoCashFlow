@@ -5,7 +5,7 @@ import os
 from datetime import date, datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, field_validator
 from typing import List, Optional
 from openai import AzureOpenAI
 from requests.auth import HTTPBasicAuth
@@ -69,9 +69,9 @@ class Complaint(BaseModel):
     soyad: str = Field(..., max_length=255)
     tel: Optional[str]
     tel: Optional[str]
-    request: Optional[str]
+    request: str
     request_date: Optional[date]
-    request_status: Optional[str]
+    request_status: str = 'Çözülmedi'
     catagory: Optional[str] = Field(None, max_length=50)
 
     @field_validator('request_date', mode='before')
@@ -118,18 +118,21 @@ class UserQuery(BaseModel):
     query: str
 
 @app.post("/classify-query/")
-async def classify_query(user_query: UserQuery):
+async def classify_query(user_query: Complaint):
     try:
+
+        cursor = conn.cursor()
+
         # Load messages and model (this should ideally be loaded once, consider using app startup events)
         file_path = 'few_shot.json'
         all_messages = read_json_file(file_path)
        
 
         # Perform semantic search
-        relevant_messages = semantic_search(user_query.query, all_messages, model)
+        relevant_messages = semantic_search(user_query.request, all_messages, model)
        
         # Prepare messages for Azure OpenAI
-        message_text = [{"role": "assistant", "content": prompt}] + relevant_messages + [{"role": "user", "content": user_query.query}]
+        message_text = [{"role": "assistant", "content": prompt}] + relevant_messages + [{"role": "user", "content": user_query.request}]
        
         # Call Azure OpenAI API
         completion = client.chat.completions.create(
@@ -141,11 +144,23 @@ async def classify_query(user_query: UserQuery):
             stop=None
         )
        
-        # Extract the assistant's response
-        assistant_response = completion.choices[0].message.content
-        return {"response": assistant_response}
+        assistant_response =  completion.choices[0].message.content.strip()
+        user_query.catagory = assistant_response
+
+         # Insert into the database
+        cursor.execute('''
+            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, catagory)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (user_query.user_id, user_query.tc, user_query.ad, user_query.soyad, user_query.tel, user_query.request, date.today(), 'Çözülmedi', user_query.catagory))
+        conn.commit()
+        user_query.id = cursor.execute("SELECT @@IDENTITY AS id;").fetchval()
+        return user_query
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"AI processing or database error: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
 
 @app.get("/")
 def root():
@@ -275,7 +290,6 @@ async def get_requests_response_sorted():
         cursor = conn.cursor()
         query = '''
             SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
-            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
             FROM dbo.requests_response
             ORDER BY request_date DESC
         '''
@@ -330,7 +344,7 @@ async def requests_response_sorted():
 # updating the status
 @app.put("/requests_response/{id}/status")
 async def update_request_status(id: int, status: str = Body(..., embed=True)):
-    valid_statuses = ['cozuldu', 'cozuluyor', 'cozulmedi']
+    valid_statuses = ['Çözüldü', 'Çözülüyor', 'Çözülmedi']
     if status not in valid_statuses:
         raise HTTPException(status_code=400, detail="İşlem geçersiz.")
 
@@ -378,7 +392,6 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
        
         cursor = conn.cursor()
         query = '''
-            SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
             SELECT id, user_id, tc, ad, soyad, request, request_date, request_status, catagory, tel
             FROM dbo.requests_response
             WHERE catagory = ?
