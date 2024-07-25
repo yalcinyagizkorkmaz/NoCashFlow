@@ -27,12 +27,6 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = "https://rgacademy3oai.openai.azure.com/"
 api_key = os.getenv("AZURE_OPENAI_KEY")
 client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/",
                       api_key = os.getenv("AZURE_OPENAI_KEY"),
-#Get the API KEY
-os.environ["AZURE_OPENAI_KEY"] = "ec442c4a9f864b508f97504f7d7e687b"
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://rgacademy3oai.openai.azure.com/"
-api_key = os.getenv("AZURE_OPENAI_KEY")
-client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/",
-                      api_key = os.getenv("AZURE_OPENAI_KEY"),
                       api_version = "2024-02-15-preview", timeout=30,
 )
 
@@ -152,10 +146,6 @@ async def classify_query(user_query: UserQuery):
         return {"response": assistant_response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
- 
-        raise HTTPException(status_code=500, detail=str(e))
- 
-
 
 @app.get("/")
 def root():
@@ -188,72 +178,6 @@ async def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
             raise HTTPException(status_code=401, detail="Geçersiz giriş")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-@app.get("/kullanici_bilgileri")
-async def get_kullanici_bilgileri():
-    try:
-        cursor = conn.cursor()
-        cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
-        rows = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        result = [dict(zip(columns, row)) for row in rows]
-        return JSONResponse(content=result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/kullanici_bilgileri", response_model=User, status_code=status.HTTP_201_CREATED)
-async def create_kullanici_bilgileri(user: User):
-    try:
-        # Connect to the database
-            cursor = conn.cursor()
-            # Prepare the SQL command
-            sql_command = """
-                INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel)
-                VALUES (?, ?, ?, ?)
-            """
-            # Execute the SQL command
-            cursor.execute(sql_command, (user.ad, user.soyad, user.tc, user.tel))
-            conn.commit()
-            # Optionally, fetch and return the ID of the created user
-            cursor.execute("SELECT @@IDENTITY AS id;")
-            user_id = cursor.fetchone()[0]
-            return {
-                "id": user_id,
-                "ad": user.ad,
-                "soyad": user.soyad,
-                "tc": user.tc,
-                "tel": user.tel
-            }
-    except pyodbc.Error as e:
-        conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Database hatası: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
-
-
-
-@app.put("/kullanici_bilgileri/{user_id}")
-async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('UPDATE dbo.kullanici_bilgileri SET ad = ?, soyad = ?, tc = ?, tel = ? WHERE user_id = ?', ad, soyad, tc, tel, user_id)
-        conn.commit()
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
-        return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
-            raise HTTPException(status_code=401, detail="Geçersiz giriş")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-@app.get("/kullanici_bilgileri")
-async def get_kullanici_bilgileri():
-    try:
-        cursor = conn.cursor()
-        cursor.execute('SELECT user_id, ad, soyad, tc, tel FROM dbo.kullanici_bilgileri')
-        rows = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        result = [dict(zip(columns, row)) for row in rows]
-        return JSONResponse(content=result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/kullanici_bilgileri", response_model=User, status_code=status.HTTP_201_CREATED)
 async def create_kullanici_bilgileri(user: User):
@@ -298,7 +222,6 @@ async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: s
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @app.get("/kullanici_bilgileri")
 async def get_kullanici_bilgileri():
     try:
@@ -313,20 +236,13 @@ async def get_kullanici_bilgileri():
    
 @app.post("/kullanici_bilgileri", status_code=status.HTTP_201_CREATED)
 async def create_kullanici_bilgileri(user: User):
-   
-@app.post("/kullanici_bilgileri", status_code=status.HTTP_201_CREATED)
-async def create_kullanici_bilgileri(user: User):
     try:
         # Connect to the database
-        # Connect to the database
         cursor = conn.cursor()
-        # Insert the new user into the database
         # Insert the new user into the database
         cursor.execute(
-            "INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)",
-            (user.ad, user.soyad, user.tc, user.tel)
-            "INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)",
-            (user.ad, user.soyad, user.tc, user.tel)
+            'INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)',
+            user.ad, user.soyad, user.tc, user.tel
         )
         conn.commit()
     except pyodbc.DatabaseError as e:
@@ -335,15 +251,7 @@ async def create_kullanici_bilgileri(user: User):
             raise HTTPException(status_code=400, detail="Bu değer girilemiyor")
         else:
             raise HTTPException(status_code=500, detail=f"Database hatası: {error}")
-    except pyodbc.DatabaseError as e:
-        error = str(e)
-        if 'IDENTITY_INSERT' in error:
-            raise HTTPException(status_code=400, detail="Bu değer girilemiyor")
-        else:
-            raise HTTPException(status_code=500, detail=f"Database hatası: {error}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Kullanıcı oluşturulamadı: {str(e)}")
-
         raise HTTPException(status_code=500, detail=f"Kullanıcı oluşturulamadı: {str(e)}")
 
 
@@ -386,13 +294,9 @@ async def get_requests_response_sorted():
             'request_status': row.request_status,
             'catagory': row.catagory,
             'tel': row.tel
-            'catagory': row.catagory,
-            'tel': row.tel
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
-   
         raise HTTPException(status_code=500, detail=f"Failed to sort complaints: {str(e)}")
    
 @app.get("/requests_response_sorted/old_to_rec", response_model=List[Complaint])
@@ -421,7 +325,6 @@ async def requests_response_sorted():
         } for row in rows]
         return JSONResponse(content=result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Şikayetler sıralanamadı: {str(e)}")
 
 # updating the status
@@ -466,29 +369,9 @@ class CategoryEnum(str, Enum):
     bireysel_kredi_hayat_sigortasi = "Bireysel Kredi Hayat Sigortası"
     ferdi_kaza = "Ferdi Kaza Sigortası"
     iletisim_merkezi = "İletişim Merkezi"
-   
 
-# kategori
-class CategoryEnum(str, Enum):
-    mobil_deniz = "MobilDeniz"
-    bireysel_kredi_kartlari = "Bireysel Kredi Kartları"
-    debit_kartlar = "Debit Kartlar"
-    yatirim_islemleri = "Yatırım İşlemleri"
-    dijital_bankacilik = "ATM"
-    dij_bankacilik = "İnternet Bankacılığı"
-    para_transferi = "Para Transferi"
-    vadeli_mevduat = "Vadeli Mevduat"
-    hesap_kart_bloke_kaldirma = "Hesap/Kart Bloke Kaldırma"
-    fraud = "EFT/ Havale Teyit"
-    dolandiricilik_bilgi_disi_suphe = "Dolandırıcılık-Bilgi Dışı Şüph. Hesap-Kart İşl."
-    bilgi_belge_sahtecilik_kayip = "Bilgi/Belge Sahtecilik/Kayıp"
-    konut_sigortasi = "Konut Sigortası"
-    bireysel_kredi_hayat_sigortasi = "Bireysel Kredi Hayat Sigortası"
-    ferdi_kaza = "Ferdi Kaza Sigortası"
-    iletisim_merkezi = "İletişim Merkezi"
 
 @app.get("/requests_response/by_category", response_model=List[Complaint])
-async def get_complaints_by_category(category: CategoryEnum = Query(..., description="Görmek istediğiniz kategoriyi seçiniz.")):
 async def get_complaints_by_category(category: CategoryEnum = Query(..., description="Görmek istediğiniz kategoriyi seçiniz.")):
     try:
        
@@ -502,9 +385,7 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
             ORDER BY request_date DESC
         '''
         cursor.execute(query, category.value)
-        cursor.execute(query, category.value)
         rows = cursor.fetchall()
-        conn.close()
         conn.close()
 
         if not rows:
@@ -523,31 +404,8 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
             tel = row.tel
         ) for row in rows]
         return result
-        result = [Complaint(
-            id=row.id,
-            user_id=row.user_id,
-            tc=row.tc,
-            ad=row.ad,
-            soyad=row.soyad,
-            request=row.request,
-            request_date=row.request_date,
-            request_status=row.request_status,
-            catagory=row.catagory,
-            tel = row.tel
-        ) for row in rows]
-        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Şikayetler gösterilemiyor: {str(e)}")
-
- 
-        raise HTTPException(status_code=500, detail=f"Şikayetler gösterilemiyor: {str(e)}")
-
- 
-
-
-
-
-
 
 
 if __name__ == '__main__':
