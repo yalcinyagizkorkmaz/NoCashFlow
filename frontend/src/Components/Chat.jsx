@@ -4,7 +4,7 @@ import indir1 from '../Png/indir1.png';
 import { Input, Button, List, Layout } from 'antd';
 import axios from 'axios';
 import Ellipse1 from '../Png/Ellipse1.png';
-import Group from '../Png/Group.svg'; // Newly added group icon
+import Group from '../Png/Group.svg'; 
 
 const { Header, Content } = Layout;
 
@@ -13,45 +13,43 @@ function Chat() {
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
+        // Initial message from the bot
         setMessages([{
             sender: 'bot',
             text: 'Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum. ' +
                   'Şikayetinizin en kısa sürede iletilip çözümlenmesi için size ben yardımcı ' +
                   'olacağım. Şimdi tüm detaylarıyla şikayetinizi yazabilirsiniz :)',
             timestamp: new Date().toLocaleTimeString()
-          }]);
-          }, []); 
+        }]);
+    }, []); 
 
     const sendMessage = () => {
         if (inputValue.trim()) {
-            const userMessage = { sender: 'user', text: inputValue, timestamp: new Date().toLocaleTimeString() };
-            setMessages([...messages, userMessage]);
-            setInputValue('');
+            const userMessage = { 
+                sender: 'user', 
+                text: inputValue, 
+                timestamp: new Date().toLocaleTimeString() 
+            };
+            setMessages(messages => [...messages, userMessage]);
 
-            axios.post('https://rgacademy3oai.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview', {
-                messages: [
-                    { role: "system", content: "You are a helpful assistant." },
-                    { role: "user", content: inputValue }
-                ],
-            }, {
-                headers: {
-                    'Authorization':`Berarer`,
-                    'Content-Type': 'application/json'
-                }
+            axios.post('http://127.0.0.1:8002/classify-query/', {
+                query: inputValue
             }).then(response => {
-                const botMessage = response.data.choices[0].message.content;
+                const botMessage = response.data.response; // Adjusted according to expected backend response
                 const timestamp = new Date().toLocaleTimeString();
-                setMessages(prevMessages => [
-                    ...prevMessages,
+                setMessages(messages => [
+                    ...messages,
                     { sender: 'bot', text: botMessage, timestamp }
                 ]);
             }).catch(error => {
-                console.error("Error fetching response from OpenAI:", error);
-                setMessages(prevMessages => [
-                    ...prevMessages,
+                console.error("Error fetching response from backend:", error);
+                setMessages(messages => [
+                    ...messages,
                     { sender: 'bot', text: 'Bir hata oluştu. Lütfen tekrar deneyin.', timestamp: new Date().toLocaleTimeString() }
                 ]);
             });
+
+            setInputValue(''); // Clear the input after sending the message
         }
     };
 
@@ -70,26 +68,24 @@ function Chat() {
                                 <p className={styles.onlineStatus}>Çevrimiçi</p>
                             </div>
                         </Header>
-                        <div className={styles.divider1}></div>
                         <Content className={styles.content}>
                             <List
                                 dataSource={messages}
                                 renderItem={item => (
-                                    <List.Item className={item.sender === 'user' ? styles.message + ' ' + styles.user : styles.message + ' ' + styles.bot}>
+                                    <List.Item key={item.timestamp + item.sender} className={item.sender === 'user' ? styles.message + ' ' + styles.user : styles.message + ' ' + styles.bot}>
                                         {item.sender === 'bot' && <img src={Ellipse1} alt="Ellipse" className={styles.botMessageImage} />}
                                         <div className={item.sender === 'user' ? styles.userMessageContent : styles.botMessageContent}>
                                             <div className={styles.messageText}>{item.text}</div>
                                             <div className={styles.timestamp}>
                                             {item.sender === 'user' && <img src={Group} alt="Group Icon" />}
                                                 {item.timestamp}
-                                               
                                             </div>
                                         </div>
                                     </List.Item>
                                 )}
                                 className={styles.messageList}
                             />
-                           <div className={styles.divider2}></div>
+                            <div className={styles.divider2}></div>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Input
                                     value={inputValue}

@@ -62,7 +62,8 @@ const Sikayet_detay = () => {
                 <br />
                 <h2>Müşteri Bilgileri</h2>
                 <br />
-                <p>İsim: <strong>{complaint.name}</strong></p>
+                <p>Ad: <strong>{complaint.ad}</strong></p>
+                <p>Soyad: <strong>{complaint.soyad}</strong></p>
                 <p>Telefon Numarası: <strong>{complaint.phone}</strong></p>
                 <p>TC: <strong>{complaint.tc}</strong></p>
                 <p>Şikayet Kategorisi: <strong>{complaint.category}</strong></p>
