@@ -15,18 +15,18 @@ class OpenAIService {
     }
 
     func generateChatResponse(prompt: String, completion: @escaping (String?) -> Void) {
-        let url = URL(string: "http://10.3.2.5:8000/chat-completion/")!
+        // Updated URL to point to the specific FastAPI endpoint
+        let url = URL(string: "http://127.0.0.1:8002/classify-query/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
+        // Ensure the JSON body matches the server's expected format.
+        // Here's an example; adjust 'messages' and other fields as required by your server.
         let body: [String: Any] = [
+            "prompt": prompt,
             "model": "gpt-4o",
-            "messages": [
-                ["role": "system", "content": "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly."],
-                ["role": "user", "content": prompt]
-            ],
             "temperature": 0.7,
             "max_tokens": 4096,
             "top_p": 0.95
@@ -43,13 +43,10 @@ class OpenAIService {
             
             do {
                 if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let choices = jsonObject["choices"] as? [[String: Any]],
-                   let firstChoice = choices.first,
-                   let message = firstChoice["message"] as? [String: Any],
-                   let content = message["content"] as? String {
-                    completion(content.trimmingCharacters(in: .whitespacesAndNewlines))
+                   let result = jsonObject["result"] as? String { // Adjust the key 'result' as per your JSON response structure
+                    completion(result)
                 } else {
-                    completion(nil)
+                    completion("Unable to parse response or no result found")
                 }
             } catch {
                 print("Failed to decode JSON: \(error)")
