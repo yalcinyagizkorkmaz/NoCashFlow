@@ -11,6 +11,7 @@ struct ChatScene: View {
     
     @State private var messageText = ""
     @State private var messages: [Message] = [Message(content: "Hello!", isFromUser: false)]
+    private var openAIService = OpenAIService(apiKey: "ec442c4a9f864b508f97504f7d7e687b")
     
         var body: some View {
         VStack() {
