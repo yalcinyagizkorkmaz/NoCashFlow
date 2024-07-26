@@ -55,7 +55,7 @@ model = None
 
 # Set Azure SQL connection string directly in the script
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user1;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
-conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user1;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
+
 
 # Veritabanı bağlantısı oluşturma
 conn = pyodbc.connect(conn_str)
@@ -63,11 +63,9 @@ conn = pyodbc.connect(conn_str)
 class Complaint(BaseModel):
     id: Optional[int]
     user_id: Optional[int]
-    user_id: Optional[int]
     tc: str = Field(..., max_length=11)
     ad: str = Field(..., max_length=255)
     soyad: str = Field(..., max_length=255)
-    tel: Optional[str]
     tel: Optional[str]
     request: str
     request_date: Optional[date]
