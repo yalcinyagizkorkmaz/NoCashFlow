@@ -16,8 +16,8 @@ const AdminPanel: FunctionComponent = () => {
 
     useEffect(() => {
         const fetchUrl = category === 'all'
-            ? 'http://127.0.0.1:8002/requests_response_sorted/recent_to_old'
-            : `http://127.0.0.1:8002/requests_response/by_category?category=${category}`;
+            ? 'http://127.0.0.1:8000/requests_response_sorted/recent_to_old'
+            : `http://127.0.0.1:8000/requests_response/by_category?category=${category}`;
         
         axios.get(fetchUrl)
             .then(response => {
