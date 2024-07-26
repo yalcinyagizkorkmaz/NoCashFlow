@@ -216,5 +216,5 @@
 
 /* Optional: Additional spacing between the title and status */
 .botName > p + p {
-    margin-top: -45px; /* Adjust the space between title and status */
+    margin-top: -6px; /* Adjust the space between title and status */
 }
