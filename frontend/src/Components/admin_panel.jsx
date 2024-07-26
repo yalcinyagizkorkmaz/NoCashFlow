@@ -237,13 +237,17 @@ const AdminPanel = () => {
                   <div className="status-buttons">
                     <button
                       className={`status-button ${
+                        !complaint.request_status ||
                         complaint.request_status === "Çözülmedi"
                           ? "unresolved-button active"
                           : ""
                       }`}
                       style={{
                         backgroundColor:
-                          complaint.request_status === "Çözülmedi" ? "red" : "",
+                          !complaint.request_status ||
+                          complaint.request_status === "Çözülmedi"
+                            ? "red"
+                            : "",
                       }}
                       disabled
                     >
