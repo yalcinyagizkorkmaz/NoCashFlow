@@ -196,20 +196,25 @@
 
 .botName {
     display: flex;
-    flex-direction: column; /* İçerikleri dikey hizalamak için */
-    align-items: flex-start;
-    margin-left: 10px;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start (left) of the container */
+    margin-left: 10px; /* Adjust the left margin if needed */
 }
 
 .botTitle {
+    font-size: 1rem; /* Adjust font size as needed */
     font-weight: bold;
-    margin-right: 5px; /* Sağ boşluk */
-    margin: 0px;
+    margin: 0; /* Remove margin */
 }
 
+/* Adjust the onlineStatus to have no margin or very minimal margin */
 .onlineStatus {
-    color: #0096d6;
-    font-size: 12px; /* Yazı boyutu */
-    margin-right: 5px; /* Sol boşluk */
-    margin: 0px; /* I-Bot yazısının hemen altında */
+    font-size: 0.8rem; /* Adjust font size as needed */
+    color: green; /* Example color for online status */
+    margin: 0; /* Remove margin */
+}
+
+/* Optional: Additional spacing between the title and status */
+.botName > p + p {
+    margin-top: -45px; /* Adjust the space between title and status */
 }

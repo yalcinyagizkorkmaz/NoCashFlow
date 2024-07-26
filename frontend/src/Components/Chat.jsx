@@ -13,7 +13,6 @@ function Chat() {
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
-        // Initial message from the bot
         setMessages([{
             sender: 'bot',
             text: 'Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum. ' +
@@ -35,7 +34,7 @@ function Chat() {
             axios.post('http://127.0.0.1:8002/classify-query/', {
                 query: inputValue
             }).then(response => {
-                const botMessage = response.data.response; // Adjusted according to expected backend response
+                const botMessage = response.data.response; 
                 const timestamp = new Date().toLocaleTimeString();
                 setMessages(messages => [
                     ...messages,
@@ -49,7 +48,7 @@ function Chat() {
                 ]);
             });
 
-            setInputValue(''); // Clear the input after sending the message
+            setInputValue('');
         }
     };
 
@@ -68,6 +67,7 @@ function Chat() {
                                 <p className={styles.onlineStatus}>Çevrimiçi</p>
                             </div>
                         </Header>
+                        <div className={styles.divider1}></div>
                         <Content className={styles.content}>
                             <List
                                 dataSource={messages}
