@@ -23,7 +23,7 @@ const Sikayet_detay = () => {
                 alert('Failed to update status.');
             }
         } catch (error) {
-            alert('Error updating complaint status.');
+            alert(`Error updating complaint status: ${error.response ? error.response.data.detail : error.message}`);
             console.error('Error updating complaint status:', error);
         }
     };

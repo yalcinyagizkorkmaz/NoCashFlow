@@ -322,6 +322,7 @@ async def update_request_status(id: int, status: str = Body(..., embed=True)):
 
         return JSONResponse(content={"message": "Şikayet durumu güncellendi"})
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
    
 
@@ -359,7 +360,6 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
         '''
         cursor.execute(query, category.value)
         rows = cursor.fetchall()
-        conn.close()
 
         if not rows:
             raise HTTPException(status_code=404, detail="Bu kategoride şikayet bulunamadı")
