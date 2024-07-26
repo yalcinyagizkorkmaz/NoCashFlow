@@ -94,6 +94,7 @@ struct UserLogin: View {
                         
                         Button(action: {
                             if validateForm() {
+                                createComplaint()
                                 navigateToNextScene = true
                             } else {
                                 showAlert = true
@@ -166,7 +167,59 @@ struct UserLogin: View {
         
         return isValid
     }
+    func createComplaint() {
+        guard let url = URL(string: "http://127.0.0.1:8002/kullanici_bilgileri") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let parameters: [String: Any] = [
+            "ad": firstName,
+            "soyad": lastName,
+            "tc": idNumber,
+            "tel": phoneNumber
+        ]
+
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                DispatchQueue.main.async {
+                    self.errorDetails = ErrorDetails(message: error?.localizedDescription ?? "Unknown error")
+                    self.showAlert = true
+                }
+                return
+            }
+
+            do {
+                if let response = response as? HTTPURLResponse, response.statusCode == 201 {
+                    DispatchQueue.main.async {
+                        self.navigateToNextScene = true
+                    }
+                } else {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+                    DispatchQueue.main.async {
+                        self.errorDetails = ErrorDetails(message: "Error: \(jsonResponse)")
+                        self.showAlert = true
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorDetails = ErrorDetails(message: error.localizedDescription)
+                    self.showAlert = true
+                }
+            }
+        }
+
+        task.resume()
+    }
+    
 }
+
+
 
 #Preview {
     UserLogin()
