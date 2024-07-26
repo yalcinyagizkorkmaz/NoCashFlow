@@ -1,102 +1,90 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "../CSS/sikayet_detay.css";
 
-const ComplaintsAdminPage = () => {
-    const [complaints, setComplaints] = useState([]);
-    const [error, setError] = useState('');
+const Sikayet_detay = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { complaint } = location.state;
 
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8002/requests_response_sorted/recent_to_old')
-            .then(response => {
-                setComplaints(response.data);
-            })
-            .catch(error => {
-                setError('Failed to fetch complaints.');
-                console.error('Fetching complaints failed:', error);
-            });
-    }, []);
-
-    const updateComplaintStatus = (id, newStatus) => {
-        axios.put(`http://127.0.0.1:8002/requests_response/${id}/status`, { status: newStatus })
-            .then(response => {
-                const updatedComplaints = complaints.map(complaint =>
-                    complaint.id === id ? { ...complaint, request_status: newStatus } : complaint
-                );
-                setComplaints(updatedComplaints);
-                alert('Status updated successfully!');
-            })
-            .catch(error => {
-                alert('Failed to update status.');
-                console.error('Updating status failed:', error);
-            });
+    const onButtonSikayetDetayCikisClick = () => {
+        navigate('/admin-giris'); // Navigate to '/admin-giris' route on button click
     };
 
-    const dashboardStyle = {
-        maxWidth: '800px',
-        margin: '20px auto',
-        padding: '20px',
-        backgroundColor: '#fff',
-        border: '1px solid #ccc',
-        borderRadius: '10px'
+    const updateComplaintStatus = async (newStatus) => {
+        try {
+            console.log(`Updating complaint status to: ${newStatus}`);
+            const response = await axios.put(`http://localhost:5000/requests_response/${complaint.id}/status`, { status: newStatus });
+            console.log('Response:', response); // Log the full response for debugging
+    
+            if (response.status === 200) {
+                // Pass updated complaint data to the admin panel
+                navigate('/admin-panel', { state: { updatedComplaint: { id: complaint.id, status: newStatus } } });
+            } else {
+                console.error('Failed to update complaint status:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating complaint status:', error.response ? error.response.data : error.message);
+        }
     };
 
-    const headingStyle = {
-        textAlign: 'center',
-        color: '#333',
-        marginBottom: '20px'
+    const onMarkAsResolvedClick = () => {
+        updateComplaintStatus('Çözüldü');
     };
 
-    const errorStyle = {
-        color: 'red',
-        textAlign: 'center'
+    const onMarkAsResolvingClick = () => {
+        updateComplaintStatus('Çözülüyor');
     };
 
-    const complaintListStyle = {
-        display: 'flex',
-        flexDirection: 'column'
-    };
-
-    const complaintCardStyle = {
-        padding: '10px',
-        marginBottom: '10px',
-        backgroundColor: '#f0f0f0',
-        borderRadius: '8px'
-    };
-
-    const paragraphStyle = {
-        margin: '5px 0',
-        color: '#333'
-    };
-
-    const actionButtonStyle = {
-        padding: '5px 10px',
-        marginRight: '5px',
-        backgroundColor: '#4CAF50',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer'
-    };
+    if (!complaint) {
+        return <div>Complaint details not found.</div>;
+    }
 
     return (
-        <div style={dashboardStyle}>
-            <h1 style={headingStyle}>Şikayet Detayları</h1>
-            {error && <p style={errorStyle}>{error}</p>}
-            <div style={complaintListStyle}>
-                {complaints.map(complaint => (
-                    <div key={complaint.id} style={complaintCardStyle}>
-                        <p style={paragraphStyle}><strong>İsim:</strong> {complaint.ad} {complaint.soyad}</p>
-                        <p style={paragraphStyle}><strong>Şikayet:</strong> {complaint.request}</p>
-                        <p style={paragraphStyle}><strong>Durum:</strong> {complaint.request_status}</p>
-                        <div className="actions">
-                            <button style={actionButtonStyle} onClick={() => updateComplaintStatus(complaint.id, 'Çözüldü')}>Çözüldü Olarak İşaretle</button>
-                            <button style={actionButtonStyle} onClick={() => updateComplaintStatus(complaint.id, 'Çözülüyor')}>Çözülüyor Olarak İşaretle</button>
-                        </div>
-                    </div>
-                ))}
+        <div>
+            <div className="header">
+                <div className="logo">
+                    <img src="/beyaz.png" alt="logo" />
+                </div>
+                <div className="header-right">
+                    <img src="/Inset.png" alt="divider" className="divider" />
+                    <span className="username">{localStorage.getItem('adminUsername') || 'Admin'}</span>
+                    <button className="logout-button" onClick={onButtonSikayetDetayCikisClick}>Çıkış Yap</button>
+                </div>
+            </div>
+            <br />
+            <div className="content">
+                <br />
+                <h1>Şikayet Detay</h1>
+                <br />
+                <div className="divider2"></div>
+                <br />
+                <h2>Müşteri Bilgileri</h2>
+                <br />
+                <p>Ad: <strong>{complaint.ad}</strong></p>
+                <p>Soyad: <strong>{complaint.soyad}</strong></p>
+                <p>Telefon Numarası: <strong>{complaint.tel}</strong></p>
+                <p>TC: <strong>{complaint.tc}</strong></p>
+                <p>Şikayet Kategorisi: <strong>{complaint.catagory}</strong></p>
+                <p>Tarih: <strong>{complaint.request_date}</strong></p>
+                <br />
+                <div className="divider2"></div>
+                <br />
+                <h2>Şikayet Metni</h2>
+                <br />
+                <p>{complaint.request}</p>
+                <br />
+                <div className="divider2"></div>
+                <br />
+            </div>
+            <div className="container">
+                <button className="cozuldu" onClick={onMarkAsResolvedClick}>Çözüldü olarak işaretle</button>
+                <button className="cozuluyor" onClick={onMarkAsResolvingClick}>Çözülüyor olarak işaretle</button>
             </div>
         </div>
     );
 };
 
-export default ComplaintsAdminPage;
+export default Sikayet_detay;
+

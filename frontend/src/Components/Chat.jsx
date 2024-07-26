@@ -31,7 +31,7 @@ function Chat() {
             };
             setMessages(messages => [...messages, userMessage]);
 
-            axios.post('http://127.0.0.1:8002/classify-query/', {
+            axios.post('http://127.0.0.1:8000/classify-query/', {
                 query: inputValue
             }).then(response => {
                 const botMessage = response.data.response; 

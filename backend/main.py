@@ -31,12 +31,17 @@ client = AzureOpenAI ( azure_endpoint = "https://rgacademy3oai.openai.azure.com/
 
 app=FastAPI()
 
+origins = [
+    "http://localhost:3000",  # Adjust to match your front-end URL
+    "http://localhost:3002",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allows all origins
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -55,7 +60,12 @@ model = None
 # Set Azure SQL connection string directly in the script
 conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:ncf.database.windows.net,1433;Database=NCFDB;UID=user1;PWD=Deneme12345;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 
-
+def get_db():
+    conn = pyodbc.connect(conn_str)
+    try:
+        yield conn
+    finally:
+        conn.close()
 # Veritabanı bağlantısı oluşturma
 conn = pyodbc.connect(conn_str)
 
@@ -115,22 +125,20 @@ class UserQuery(BaseModel):
     query: str
 
 @app.post("/classify-query/")
-async def classify_query(user_query: Complaint):
+async def classify_query(user_query: Complaint, conn = Depends(get_db)):
     try:
-
         cursor = conn.cursor()
 
         # Load messages and model (this should ideally be loaded once, consider using app startup events)
         file_path = 'few_shot.json'
         all_messages = read_json_file(file_path)
-       
 
         # Perform semantic search
         relevant_messages = semantic_search(user_query.request, all_messages, model)
-       
+
         # Prepare messages for Azure OpenAI
-        message_text = [{"role": "assistant", "content": prompt}] + relevant_messages + [{"role": "user", "content": user_query.request}]
-       
+        message_text = [{"role": "assistant", "content": "prompt"}] + relevant_messages + [{"role": "user", "content": user_query.request}]
+
         # Call Azure OpenAI API
         completion = client.chat.completions.create(
             model="gpt-4o",
@@ -140,15 +148,14 @@ async def classify_query(user_query: Complaint):
             top_p=0.95,
             stop=None
         )
-       
-        assistant_response =  completion.choices[0].message.content.strip()
-        user_query.catagory = assistant_response
+        assistant_response = completion.choices[0].text.strip()
+        user_query.category = assistant_response
 
-         # Insert into the database
+        # Insert into the database
         cursor.execute('''
-            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, catagory)
+            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, category)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (user_query.user_id, user_query.tc, user_query.ad, user_query.soyad, user_query.tel, user_query.request, date.today(), 'Çözülmedi', user_query.catagory))
+        ''', (user_query.user_id, user_query.tc, user_query.ad, user_query.soyad, user_query.tel, user_query.request, date.today(), 'Çözülmedi', user_query.category))
         conn.commit()
         user_query.id = cursor.execute("SELECT @@IDENTITY AS id;").fetchval()
         return user_query
@@ -157,8 +164,6 @@ async def classify_query(user_query: Complaint):
         raise HTTPException(status_code=500, detail=f"AI processing or database error: {str(e)}")
     finally:
         cursor.close()
-        conn.close()
-
 @app.get("/")
 def root():
     return {"message": "Hello World"}

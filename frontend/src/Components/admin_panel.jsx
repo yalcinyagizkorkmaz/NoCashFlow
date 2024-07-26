@@ -1,13 +1,13 @@
-import React, { useEffect, useState, FunctionComponent, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import "../CSS/admin_panel.css";
 import "../CSS/header.css";
 
-const AdminPanel: FunctionComponent = () => {
+const AdminPanel = () => {
     const navigate = useNavigate();
     const [complaints, setComplaints] = useState([]);
-    const [category, setCategory] = useState('all');
+    const [catagory, setCategory] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [error, setError] = useState('');
     const [sortOrder, setSortOrder] = useState('desc'); // Default sorting order
@@ -15,9 +15,9 @@ const AdminPanel: FunctionComponent = () => {
     const complaintsPerPage = 10;
 
     useEffect(() => {
-        const fetchUrl = category === 'all'
+        const fetchUrl = catagory === 'all'
             ? 'http://127.0.0.1:8000/requests_response_sorted/recent_to_old'
-            : `http://127.0.0.1:8000/requests_response/by_category?category=${category}`;
+            : `http://127.0.0.1:8000/requests_response/by_category?category=${catagory}`;
         
         axios.get(fetchUrl)
             .then(response => {
@@ -28,7 +28,7 @@ const AdminPanel: FunctionComponent = () => {
                 setError('Error fetching complaints: ' + error.message);
                 console.error('Error fetching complaints:', error);
             });
-    }, [category]);
+    }, [catagory]);
 
     const onButtonSikayetCikisClick = useCallback(() => {
         navigate('/admin-giris');
@@ -41,7 +41,7 @@ const AdminPanel: FunctionComponent = () => {
         }
     };
 
-    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleCategoryChange = (event) => {
         setCategory(event.target.value);
         setCurrentPage(1); // Reset to the first page when the category changes
     };
@@ -51,7 +51,7 @@ const AdminPanel: FunctionComponent = () => {
         setCurrentPage(1);
     };
 
-    const handleSort = (order: string) => {
+    const handleSort = (order) => {
         setSortOrder(order);
         setIsSortDropdownVisible(false);
     };
@@ -60,17 +60,17 @@ const AdminPanel: FunctionComponent = () => {
         setIsSortDropdownVisible(!isSortDropdownVisible);
     };
 
-    const handleStatusChange = (index: number, newStatus: string) => {
+    const handleStatusChange = (index, newStatus) => {
         const updatedComplaints = [...complaints];
         const complaint = updatedComplaints[index];
         complaint.request_status = newStatus; // assuming request_status is the property name
         setComplaints(updatedComplaints);
     };
 
-    const filteredComplaints = complaints.filter(complaint => category === 'all' || complaint.category === category);
+    const filteredComplaints = complaints.filter(complaint => catagory === 'all' || complaint.catagory === catagory);
 
     const sortedComplaints = filteredComplaints.sort((a, b) => {
-        return sortOrder === 'asc' ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+        return sortOrder === 'asc' ? new Date(a.date).getTime() - new Date(b.date).getTime() : new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
     const indexOfLastComplaint = currentPage * complaintsPerPage;
@@ -78,12 +78,11 @@ const AdminPanel: FunctionComponent = () => {
     const currentComplaints = sortedComplaints.slice(indexOfFirstComplaint, indexOfLastComplaint);
     const totalPages = Math.ceil(sortedComplaints.length / complaintsPerPage);
 
-    const handlePageChange = (pageNumber: number) => {
+    const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
     const adminUsername = localStorage.getItem('adminUsername') || 'Admin';
-
 
     return (
         <div>
@@ -111,13 +110,12 @@ const AdminPanel: FunctionComponent = () => {
                                 </g>
                             </g>
                         </svg>
-                        <select id="category-select" value={category} onChange={handleCategoryChange} className='select-category'>
+                        <select id="category-select" value={catagory} onChange={handleCategoryChange} className='select-category'>
                             <option value="all">Tüm Kategoriler</option>
                             <option value="Mobil Deniz">MobilDeniz</option>
                             <option value="Bireysel Kredi Kartları">Bireysel Kredi Kartları</option>
                             <option value="Debit Kartlar">Debit Kartlar</option>
-                            <option value="ATM">ATM</option>
-                            <option value="İnternet Bankacılığı">ATM</option>
+                            <option value="atm">ATM</option>
                             <option value="Yatırım İşlemleri">Yatırım İşlemleri</option>
                             <option value="Para Transferi">Para Transferi</option>
                             <option value="Vadeli Mevduat">Vadeli Mevduat</option>
@@ -137,10 +135,9 @@ const AdminPanel: FunctionComponent = () => {
                         </svg>
                         <button type="button" onClick={handleReset}>Filtreyi Sıfırla</button>
                     </div>
-                  
                 </form>
             </div>
-         
+
             <div className="table-container">
                 <table>
                     <thead>
@@ -166,40 +163,38 @@ const AdminPanel: FunctionComponent = () => {
                                 <td>{complaint.request_date}</td>
                                 <td>{complaint.catagory}</td>
                                 <td>
-    <div className="status-buttons">
-        <button 
-            className={`status-button unresolved-button ${complaint.status === 'Çözülmedi' ? 'active' : ''}`} 
-            disabled={complaint.status === 'Çözülmedi'}
-            onClick={() => handleStatusChange(index, 'Çözülmedi')}
-        >
-            Çözülmedi
-        </button>
-        <button 
-            className={`status-button ${complaint.status === 'Çözülüyor' ? 'active' : ''}`} 
-            disabled={complaint.status === 'Çözülmedi'}
-            onClick={() => handleStatusChange(index, 'Çözülüyor')}
-        >
-            Çözülüyor
-        </button>
-        <button 
-            className={`status-button ${complaint.status === 'Çözüldü' ? 'active' : ''}`} 
-            disabled={complaint.status === 'Çözülmedi'}
-            onClick={() => handleStatusChange(index, 'Çözüldü')}
-        >
-            Çözüldü
-        </button>
-        <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
-    </div>
-</td>
-
-
+                                    <div className="status-buttons">
+                                        <button 
+                                            className={`status-button unresolved-button ${complaint.request_status === 'Çözülmedi' ? 'active' : ''}`} 
+                                            disabled={complaint.request_status === 'Çözülmedi'}
+                                            onClick={() => handleStatusChange(index, 'Çözülmedi')}
+                                        >
+                                            Çözülmedi
+                                        </button>
+                                        <button 
+                                            className={`status-button ${complaint.request_status === 'Çözülüyor' ? 'active' : ''}`} 
+                                            disabled={complaint.request_status === 'Çözülmedi'}
+                                            onClick={() => handleStatusChange(index, 'Çözülüyor')}
+                                        >
+                                            Çözülüyor
+                                        </button>
+                                        <button 
+                                            className={`status-button ${complaint.request_status === 'Çözüldü' ? 'active' : ''}`} 
+                                            disabled={complaint.request_status === 'Çözülmedi'}
+                                            onClick={() => handleStatusChange(index, 'Çözüldü')}
+                                        >
+                                            Çözüldü
+                                        </button>
+                                        <button className='inceleme-button' onClick={() => handleIncelemeChange(complaint.id)}>İnceleme</button>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-           <div className="pagination">
+            <div className="pagination">
                 <button 
                     onClick={() => handlePageChange(currentPage - 1)} 
                     disabled={currentPage === 1}
