@@ -1,10 +1,9 @@
-from fastapi import FastAPI, APIRouter,HTTPException, Query, Body, Request
+from fastapi import FastAPI, APIRouter,HTTPException, Query, Body, Request, Depends, status
 from fastapi.responses import JSONResponse
 import pyodbc
 import os
 from datetime import date, datetime
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field, validator, field_validator
 from typing import List, Optional
 from openai import AzureOpenAI
@@ -34,7 +33,7 @@ app=FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3001"],  # Allows all origins
+    allow_origins=["http://localhost:3000"],  # Allows all origins
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
@@ -192,48 +191,6 @@ async def admin_login(form_data: OAuth2PasswordRequestForm = Depends()):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/kullanici_bilgileri", response_model=User, status_code=status.HTTP_201_CREATED)
-async def create_kullanici_bilgileri(user: User):
-    try:
-        # Connect to the database
-            cursor = conn.cursor()
-            # Prepare the SQL command
-            sql_command = """
-                INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel)
-                VALUES (?, ?, ?, ?)
-            """
-            # Execute the SQL command
-            cursor.execute(sql_command, (user.ad, user.soyad, user.tc, user.tel))
-            conn.commit()
-            # Optionally, fetch and return the ID of the created user
-            cursor.execute("SELECT @@IDENTITY AS id;")
-            user_id = cursor.fetchone()[0]
-            return {
-                "id": user_id,
-                "ad": user.ad,
-                "soyad": user.soyad,
-                "tc": user.tc,
-                "tel": user.tel
-            }
-    except pyodbc.Error as e:
-        conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Database hatası: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Hata: {str(e)}")
-
-
-
-@app.put("/kullanici_bilgileri/{user_id}")
-async def update_kullanici_bilgileri(user_id: int, ad: str = Body(...), soyad: str = Body(...), tc: str = Body(...), tel: str = Body(...)):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('UPDATE dbo.kullanici_bilgileri SET ad = ?, soyad = ?, tc = ?, tel = ? WHERE user_id = ?', ad, soyad, tc, tel, user_id)
-        conn.commit()
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
-        return {"message": "Kullanıcı bilgileri başarıyla güncellendi"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/kullanici_bilgileri")
 async def get_kullanici_bilgileri():
@@ -421,4 +378,4 @@ async def get_complaints_by_category(category: CategoryEnum = Query(..., descrip
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8002)
+    uvicorn.run(app, host='127.0.0.1', port=8000)

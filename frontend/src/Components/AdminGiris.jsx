@@ -23,19 +23,19 @@ const AdminGiriBA = () => {
             message.error('Lütfen tüm alanları doldurun.');
             return;
         }
-
+    
         try {
-            // Prepare form data
-            const formData = new FormData();
+            // Prepare URL-encoded form data
+            const formData = new URLSearchParams();
             formData.append('username', username);
             formData.append('password', password);
-
-            const response = await axios.post('http://127.0.0.1:8002/admin/login', formData, {
+    
+            const response = await axios.post('http://127.0.0.1:8000/admin/login', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-
+    
             if (response.data.message === "Login successful") {
                 localStorage.setItem('adminUsername', username);
                 navigate('/admin-paneli');
@@ -48,6 +48,9 @@ const AdminGiriBA = () => {
             console.error('Login error:', error);
         }
     }, [username, password, navigate]);
+    
+
+      
 
     return (
         <div className={styles.adminGiriBa} style={{ marginTop: '-90px' }}>
