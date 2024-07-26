@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "../CSS/sikayet_detay.css";
@@ -6,36 +6,31 @@ import "../CSS/sikayet_detay.css";
 const Sikayet_detay = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { complaint } = location.state;
+    const { complaint: initialComplaint } = location.state;
+    const [complaint, setComplaint] = useState(initialComplaint); // Maintain complaint in local state
 
-    const onButtonSikayetDetayCikisClick = () => {
-        navigate('/admin-giris'); // Navigate to '/admin-giris' route on button click
-    };
+    const onButtonSikayetDetayCikisClick = () => navigate('/admin-giris');
 
     const updateComplaintStatus = async (newStatus) => {
         try {
-            console.log(`Updating complaint status to: ${newStatus}`);
-            const response = await axios.put(`http://localhost:5000/requests_response/${complaint.id}/status`, { status: newStatus });
-            console.log('Response:', response); // Log the full response for debugging
-    
+            const response = await axios.put(`http://127.0.0.1:8000/requests_response/${complaint.id}/status`, { status: newStatus });
             if (response.status === 200) {
-                // Pass updated complaint data to the admin panel
-                navigate('/admin-panel', { state: { updatedComplaint: { id: complaint.id, status: newStatus } } });
+                alert('Status updated successfully!');
+                setComplaint({ ...complaint, request_status: newStatus });  // Update local state
+                // Navigate back to the admin panel with updated data
+                navigate('/admin-paneli', { replace: true }); // Use 'replace: true' to replace the current entry in the history stack
             } else {
-                console.error('Failed to update complaint status:', response.status, response.statusText);
+                alert('Failed to update status.');
             }
         } catch (error) {
-            console.error('Error updating complaint status:', error.response ? error.response.data : error.message);
+            alert('Error updating complaint status.');
+            console.error('Error updating complaint status:', error);
         }
     };
+    
 
-    const onMarkAsResolvedClick = () => {
-        updateComplaintStatus('Çözüldü');
-    };
-
-    const onMarkAsResolvingClick = () => {
-        updateComplaintStatus('Çözülüyor');
-    };
+    const onMarkAsResolvedClick = () => updateComplaintStatus('Çözüldü');
+    const onMarkAsResolvingClick = () => updateComplaintStatus('Çözülüyor');
 
     if (!complaint) {
         return <div>Complaint details not found.</div>;
