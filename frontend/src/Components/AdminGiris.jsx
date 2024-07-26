@@ -1,30 +1,51 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, message } from 'antd'; // Import Input and message from Ant Design
+import axios from 'axios';
+import { Button, Input, message } from 'antd';
 import styles from '../CSS/AdminGirisBa.module.css';
 import mavi1 from '../Png/mavi1.png';
 
-const AdminGiriBA: FunctionComponent = () => {
+const AdminGiriBA = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); // Initialize useNavigate hook
 
-    const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onUsernameChange = (e) => {
         setUsername(e.target.value);
     };
 
-    const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onPasswordChange = (e) => {
         setPassword(e.target.value);
     };
 
-    const onButtonAdminGirisClick = useCallback(() => {
+    const onButtonAdminGirisClick = useCallback(async () => {
         if (!username || !password) {
             message.error('Lütfen tüm alanları doldurun.');
-        } else {
-            // Store the username in localStorage
-            localStorage.setItem('adminUsername', username);
-            console.log("Admin giriş Yapıldı!");
-            navigate('/admin-paneli');
+            return;
+        }
+
+        try {
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+
+            const response = await axios.post('http://127.0.0.1:8002/admin/login', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if (response.data.message === "Login successful") {
+                localStorage.setItem('adminUsername', username);
+                navigate('/admin-paneli');
+                message.success('Giriş başarılı');
+            } else {
+                message.error('Giriş başarısız. Bilgilerinizi kontrol edin.');
+            }
+        } catch (error) {
+            message.error('Giriş işlemi sırasında bir hata oluştu.');
+            console.error('Login error:', error);
         }
     }, [username, password, navigate]);
 
