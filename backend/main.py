@@ -70,16 +70,16 @@ def get_db():
 conn = pyodbc.connect(conn_str)
 
 class Complaint(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     user_id: Optional[int]
     tc: str = Field(..., max_length=11)
     ad: str = Field(..., max_length=255)
     soyad: str = Field(..., max_length=255)
-    tel: Optional[str]
+    tel: str = Field(..., max_length=15)
     request: str
     request_date: Optional[date]
     request_status: str = 'Çözülmedi'
-    catagory: Optional[str] = Field(None, max_length=50)
+    catagory: Optional[str] = Field(None, max_length=1024)
 
     @field_validator('request_date', mode='before')
     def format_date(cls, value):
@@ -92,6 +92,7 @@ class User(BaseModel):
     soyad: str
     tc: str
     tel: str
+    
 
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -128,16 +129,17 @@ class UserQuery(BaseModel):
 async def classify_query(user_query: Complaint, conn = Depends(get_db)):
     try:
         cursor = conn.cursor()
+        logging.info("Request received: %s", user_query.dict())
 
         # Load messages and model (this should ideally be loaded once, consider using app startup events)
-        file_path = 'few_shot.json'
         all_messages = read_json_file(file_path)
 
         # Perform semantic search
         relevant_messages = semantic_search(user_query.request, all_messages, model)
 
         # Prepare messages for Azure OpenAI
-        message_text = [{"role": "assistant", "content": "prompt"}] + relevant_messages + [{"role": "user", "content": user_query.request}]
+        message_text = [{"role": "assistant", "content": prompt}] + relevant_messages + [{"role": "user", "content": user_query.request}]
+        logging.info('Prepared message_text: %s', message_text)
 
         # Call Azure OpenAI API
         completion = client.chat.completions.create(
@@ -147,23 +149,32 @@ async def classify_query(user_query: Complaint, conn = Depends(get_db)):
             temperature=0.7,
             top_p=0.95,
             stop=None
+
         )
-        assistant_response = completion.choices[0].text.strip()
-        user_query.category = assistant_response
+
+        logging.info("OpenAI API Response: %s", completion.choices[0])
+
+        assistant_response = completion.choices[0].message.content.strip()
+        user_query.catagory = assistant_response
+        logging.info('Assistant response: %s', assistant_response)
 
         # Insert into the database
+        cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, category)
+            INSERT INTO dbo.requests_response (user_id, tc, ad, soyad, tel, request, request_date, request_status, catagory)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (user_query.user_id, user_query.tc, user_query.ad, user_query.soyad, user_query.tel, user_query.request, date.today(), 'Çözülmedi', user_query.category))
+        ''', (user_query.user_id, user_query.tc, user_query.ad, user_query.soyad, user_query.tel, user_query.request, user_query.request_date or date.today(), user_query.request_status, user_query.catagory))
         conn.commit()
         user_query.id = cursor.execute("SELECT @@IDENTITY AS id;").fetchval()
+        logging.info('Inserted record ID: %s', user_query.id)
         return user_query
     except Exception as e:
+        logging.error('Error during classify_query: %s', str(e))
         conn.rollback()
         raise HTTPException(status_code=500, detail=f"AI processing or database error: {str(e)}")
     finally:
         cursor.close()
+
 @app.get("/")
 def root():
     return {"message": "Hello World"}
@@ -208,26 +219,31 @@ async def get_kullanici_bilgileri():
         return JSONResponse(content=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-   
 @app.post("/kullanici_bilgileri", status_code=status.HTTP_201_CREATED)
 async def create_kullanici_bilgileri(user: User):
     try:
-        # Connect to the database
         cursor = conn.cursor()
-        # Insert the new user into the database
         cursor.execute(
             'INSERT INTO dbo.kullanici_bilgileri (ad, soyad, tc, tel) VALUES (?, ?, ?, ?)',
             user.ad, user.soyad, user.tc, user.tel
         )
         conn.commit()
+        user_id = cursor.execute("SELECT @@IDENTITY AS user_id;").fetchval()
+        logging.info('Inserted user ID: %s', user_id)
+        user_data = user.dict()
+        user_data['user_id'] = user_id
+        return user_data
     except pyodbc.DatabaseError as e:
         error = str(e)
+        logging.error('Database error: %s', error)
         if 'IDENTITY_INSERT' in error:
             raise HTTPException(status_code=400, detail="Bu değer girilemiyor")
         else:
             raise HTTPException(status_code=500, detail=f"Database hatası: {error}")
     except Exception as e:
+        logging.error('Error creating user: %s', str(e))
         raise HTTPException(status_code=500, detail=f"Kullanıcı oluşturulamadı: {str(e)}")
+
 
 
 @app.put("/kullanici_bilgileri/{user_id}")

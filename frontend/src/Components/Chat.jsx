@@ -11,8 +11,12 @@ const { Header, Content } = Layout;
 function Chat() {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')); // Retrieve user info from local storage
 
     useEffect(() => {
+        if (userInfo) {
+            console.log('Retrieved user info from localStorage:', userInfo); // Log the user info
+        }
         setMessages([{
             sender: 'bot',
             text: 'Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum. ' +
@@ -31,22 +35,32 @@ function Chat() {
             };
             setMessages(messages => [...messages, userMessage]);
 
-            axios.post('http://127.0.0.1:8000/classify-query/', {
-                query: inputValue
-            }).then(response => {
-                const botMessage = response.data.response; 
-                const timestamp = new Date().toLocaleTimeString();
-                setMessages(messages => [
-                    ...messages,
-                    { sender: 'bot', text: botMessage, timestamp }
-                ]);
-            }).catch(error => {
-                console.error("Error fetching response from backend:", error);
-                setMessages(messages => [
-                    ...messages,
-                    { sender: 'bot', text: 'Bir hata oluştu. Lütfen tekrar deneyin.', timestamp: new Date().toLocaleTimeString() }
-                ]);
-            });
+            const payload = {
+                user_id: userInfo.user_id, // Ensure user_id is included
+                ...userInfo,
+                request: inputValue,
+                request_date: new Date().toISOString().split('T')[0],
+                request_status: 'Çözülmedi',
+                catagory: ''
+            };
+
+            console.log('Payload being sent:', payload); // Log the payload
+            axios.post('http://127.0.0.1:8000/classify-query/', payload)
+                .then(response => {
+                    const botMessage = response.data.catagory; 
+                    const timestamp = new Date().toLocaleTimeString();
+                    setMessages(messages => [
+                        ...messages,
+                        { sender: 'bot', text: botMessage, timestamp }
+                    ]);
+                })
+                .catch(error => {
+                    console.error("Error fetching response from backend:", error);
+                    setMessages(messages => [
+                        ...messages,
+                        { sender: 'bot', text: 'Bir hata oluştu. Lütfen tekrar deneyin.', timestamp: new Date().toLocaleTimeString() }
+                    ]);
+                });
 
             setInputValue('');
         }
