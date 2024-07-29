@@ -8,13 +8,18 @@
 import SwiftUI
 
 struct ChatScene: View {
-    
+    @ObservedObject var userModel: UserModel
     @State private var messageText = ""
     @State private var messages: [Message] = [Message(content: "Hello!", isFromUser: false)]
     private var openAIService = OpenAIService(apiKey: "ec442c4a9f864b508f97504f7d7e687b")
-    
-        var body: some View {
-        VStack() {
+
+    // Public initializer
+    init(userModel: UserModel) {
+        self._userModel = ObservedObject(wrappedValue: userModel)
+    }
+
+    var body: some View {
+        VStack {
             ZStack {
                 Image("Rectangle 10")
                     .resizable()
@@ -43,7 +48,7 @@ struct ChatScene: View {
                 .padding(.top, 30)
             }
             .frame(height: 0)
-            
+
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack {
@@ -61,9 +66,9 @@ struct ChatScene: View {
                     }
                 }
             }
-            .frame(maxHeight:.infinity)
+            .frame(maxHeight: .infinity)
             .padding(.top, 60)
-            
+
             ZStack {
                 Image("Rectangle 11")
                     .resizable()
@@ -85,18 +90,44 @@ struct ChatScene: View {
         }
         .navigationBarBackButtonHidden(true)
     }
+
     private func sendMessage() {
-           let userMessage = Message(content: messageText, isFromUser: true)
-           messages.append(userMessage)
-           messageText = ""
-           
-           openAIService.generateChatResponse(prompt: userMessage.content) { response in
-               DispatchQueue.main.async {
-                   if let response = response {
-                       let responseMessage = Message(content: response, isFromUser: false)
-                       messages.append(responseMessage)
-                   } else {
-                       messages.append(Message(content: "Error generating response.", isFromUser: false))
+        let currentMessageText = messageText // Capture the messageText before it's cleared
+        let userMessage = Message(content: currentMessageText, isFromUser: true)
+        messages.append(userMessage)
+        messageText = ""
+
+        print("Sending message with the following details:")
+        print("id: \(userModel.id)")
+        print("user_id: \(userModel.userId)")
+        print("tc: \(userModel.tc)")
+        print("ad: \(userModel.ad)")
+        print("soyad: \(userModel.soyad)")
+        print("tel: \(userModel.tel)")
+        print("requestString: \(currentMessageText)")
+        print("request_date: \(userModel.requestDate)")
+        print("request_status: \(userModel.requestStatus)")
+
+        openAIService.generateChatResponse(
+            id: userModel.id,
+            user_id: userModel.userId,
+            tc: userModel.tc,
+            ad: userModel.ad,
+            soyad: userModel.soyad,
+            tel: userModel.tel,
+            requestString: currentMessageText,
+            request_date: userModel.requestDate,
+            request_status: userModel.requestStatus
+        ) { category in
+            DispatchQueue.main.async {
+                if let category = category {
+                    print((category))
+                    let responseMessage = Message(content: (category), isFromUser: false)
+                    messages.append(responseMessage)
+                } else {
+                    print("Error generating category.")
+                    let errorMessage = Message(content: "Error generating category.", isFromUser: false)
+                    messages.append(errorMessage)
                 }
             }
         }
@@ -104,6 +135,7 @@ struct ChatScene: View {
 }
 
 
+
 #Preview {
-    ChatScene()
+    ChatScene(userModel: UserModel())
 }

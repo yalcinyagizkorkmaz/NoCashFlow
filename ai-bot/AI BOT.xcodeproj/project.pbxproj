@@ -19,6 +19,7 @@
 		69B8AAC42C4808CD0069E719 /* AI_BOTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */; };
 		69B8AAC52C4808CD0069E719 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B8AAC02C4808CD0069E719 /* ContentView.swift */; };
 		69C2899A2C4E251F008ED4C3 /* UserLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C289992C4E251F008ED4C3 /* UserLogin.swift */; };
+		69EB6F122C578D2F0004A5AC /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EB6F112C578D2F0004A5AC /* UserData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AI_BOTApp.swift; sourceTree = "<group>"; };
 		69B8AAC02C4808CD0069E719 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		69C289992C4E251F008ED4C3 /* UserLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLogin.swift; sourceTree = "<group>"; };
+		69EB6F112C578D2F0004A5AC /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				6972FCBD2C37EAF500CCF341 /* Message.swift */,
 				6991BF592C4E6783009EF2A3 /* ErrorDetails.swift */,
+				69EB6F112C578D2F0004A5AC /* UserData.swift */,
 				6972FCBB2C37E96400CCF341 /* OpenAIService.swift */,
 				69B8AABF2C4808CD0069E719 /* AI_BOTApp.swift */,
 				693CE0ED2C4E7B4C001A8A8C /* ChatMessageCell.swift */,
@@ -172,6 +175,7 @@
 				69B8AAC52C4808CD0069E719 /* ContentView.swift in Sources */,
 				69C2899A2C4E251F008ED4C3 /* UserLogin.swift in Sources */,
 				69A1ED382C493DE1005C192F /* LaunchScreen.swift in Sources */,
+				69EB6F122C578D2F0004A5AC /* UserData.swift in Sources */,
 				6991BF5A2C4E6783009EF2A3 /* ErrorDetails.swift in Sources */,
 				69B8AAC42C4808CD0069E719 /* AI_BOTApp.swift in Sources */,
 				6972FCBE2C37EAF500CCF341 /* Message.swift in Sources */,

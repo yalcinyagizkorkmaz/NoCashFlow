@@ -1,17 +1,7 @@
-//
-//  UserLogin.swift
-//  AI BOT
-//
-//  Created by Ali Kaan Karagözgil on 22.07.2024.
-//
-
 import SwiftUI
 
 struct UserLogin: View {
-    @State private var firstName = ""
-    @State private var lastName = ""
-    @State private var phoneNumber = ""
-    @State private var idNumber = ""
+    @StateObject var userModel = UserModel()
     @State private var isFormValid = false
     @State private var navigateToNextScene = false
     
@@ -38,7 +28,7 @@ struct UserLogin: View {
                                 Text("Adınız:")
                                     .font(.body)
                                     .foregroundColor(.white)
-                                TextField("Adınızı giriniz", text: $firstName)
+                                TextField("Adınızı giriniz", text: $userModel.ad)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                     .foregroundColor(.black)
                                     .background(Color.gray.opacity(0.2))
@@ -50,7 +40,7 @@ struct UserLogin: View {
                                 Text("Soyadınız:")
                                     .font(.body)
                                     .foregroundColor(.white)
-                                TextField("Soyadınızı giriniz", text: $lastName)
+                                TextField("Soyadınızı giriniz", text: $userModel.soyad)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                     .foregroundColor(.black)
                                     .background(Color.gray.opacity(0.2))
@@ -63,7 +53,7 @@ struct UserLogin: View {
                             Text("Telefon Numaranız:")
                                 .font(.body)
                                 .foregroundColor(.white)
-                            TextField("Telefon numaranızı giriniz", text: $phoneNumber)
+                            TextField("Telefon numaranızı giriniz", text: $userModel.tel)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .foregroundColor(.black)
                                 .background(Color.gray.opacity(0.2))
@@ -75,7 +65,7 @@ struct UserLogin: View {
                             Text("TC Kimlik numaranız:")
                                 .font(.body)
                                 .foregroundColor(.white)
-                            TextField("TC Kimlik numaranızı giriniz", text: $idNumber)
+                            TextField("TC Kimlik numaranızı giriniz", text: $userModel.tc)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .foregroundColor(.black)
                                 .background(Color.gray.opacity(0.2))
@@ -115,7 +105,7 @@ struct UserLogin: View {
                         Spacer()
                     }
                     .navigationDestination(isPresented: $navigateToNextScene) {
-                        ChatScene()
+                        ChatScene(userModel: userModel) // Pass the existing userModel instance
                     }
                 }
             }
@@ -127,31 +117,31 @@ struct UserLogin: View {
         var isValid = true
         var messages: [String] = []
         
-        if firstName.isEmpty {
+        if userModel.ad.isEmpty {
             messages.append("Adınızı giriniz.")
             isValid = false
-        } else if firstName.contains(where: { $0.isNumber }) {
+        } else if userModel.ad.contains(where: { $0.isNumber }) {
             messages.append("Adınızda sayı bulunamaz.")
             isValid = false
         }
         
-        if lastName.isEmpty {
+        if userModel.soyad.isEmpty {
             messages.append("Soyadınızı giriniz.")
             isValid = false
-        } else if lastName.contains(where: { $0.isNumber }) {
+        } else if userModel.soyad.contains(where: { $0.isNumber }) {
             messages.append("Soyadınızda sayı bulunamaz.")
             isValid = false
         }
         
-        if phoneNumber.isEmpty {
+        if userModel.tel.isEmpty {
             messages.append("Telefon numaranızı giriniz.")
             isValid = false
-        } else if phoneNumber.count != 10 || !phoneNumber.allSatisfy({ $0.isNumber }) {
+        } else if userModel.tel.count != 10 || !userModel.tel.allSatisfy({ $0.isNumber }) {
             messages.append("Telefon numaranız 10 karakter ve sadece rakamlardan oluşmalıdır.")
             isValid = false
         }
         
-        if idNumber.count != 11 {
+        if userModel.tc.count != 11 {
             messages.append("TC Kimlik numaranız 11 karakter olmalıdır.")
             isValid = false
         }
@@ -167,8 +157,9 @@ struct UserLogin: View {
         
         return isValid
     }
+
     func createComplaint() {
-        guard let url = URL(string: "http://127.0.0.1:8002/kullanici_bilgileri") else {
+        guard let url = URL(string: "http://127.0.0.1:8000/kullanici_bilgileri") else {
             return
         }
 
@@ -177,10 +168,10 @@ struct UserLogin: View {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let parameters: [String: Any] = [
-            "ad": firstName,
-            "soyad": lastName,
-            "tc": idNumber,
-            "tel": phoneNumber
+            "ad": userModel.ad,
+            "soyad": userModel.soyad,
+            "tc": userModel.tc,
+            "tel": userModel.tel
         ]
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -216,10 +207,7 @@ struct UserLogin: View {
 
         task.resume()
     }
-    
 }
-
-
 
 #Preview {
     UserLogin()
