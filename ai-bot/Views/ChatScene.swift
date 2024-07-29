@@ -122,8 +122,13 @@ struct ChatScene: View {
             DispatchQueue.main.async {
                 if let category = category {
                     print((category))
-                    let responseMessage = Message(content: ("Şikayetinizi detaylıca açıkladığınız için teşekkür ederim. Şikayetinizi \(category) birimine ilettim. Şikayetinizin en kısa zamanda değerlendirilip,tarafınıza dönüş yapılacağından emin olabilirsiniz. İyi günler dilerim."), isFromUser: false)
-                    messages.append(responseMessage)
+                    if category == "Üzgünüm, sadece sınıflandırma işlemlerini uyguluyorum." {
+                        let errorResponseMessage = Message(content: category, isFromUser: false)
+                        messages.append(errorResponseMessage)
+                    }else{
+                        let responseMessage = Message(content: ("Şikayetinizi detaylıca açıkladığınız için teşekkür ederim. Şikayetinizi \(category) birimine ilettim. Şikayetinizin en kısa zamanda değerlendirilip,tarafınıza dönüş yapılacağından emin olabilirsiniz. İyi günler dilerim."), isFromUser: false)
+                        messages.append(responseMessage)
+                    }
                 } else {
                     print("Error generating category.")
                     let errorMessage = Message(content: "Error generating category.", isFromUser: false)
