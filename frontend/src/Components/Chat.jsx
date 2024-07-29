@@ -52,7 +52,11 @@ function Chat() {
         .post("http://127.0.0.1:8000/classify-query/", payload)
         .then((response) => {
           const botMessageCategory = response.data.catagory;
-          const botMessage = `Şikayetinizi detaylıca açıkladığınız için teşekkür ederim:) Şikayetinizi "${botMessageCategory}" birimine ilettim. Şikayetinizin en kısa zamanda değerlendirilip, tarafınıza dönüş yapılacağından emin olabilirsiniz.İyi günler dilerim.`;
+          const botMessage =
+            botMessageCategory ===
+            "Üzgünüm, sadece sınıflandırma işlemlerini uyguluyorum."
+              ? botMessageCategory
+              : `Şikayetinizi detaylıca açıkladığınız için teşekkür ederim:) Şikayetinizi "${botMessageCategory}" birimine ilettim. Şikayetinizin en kısa zamanda değerlendirilip, tarafınıza dönüş yapılacağından emin olabilirsiniz.İyi günler dilerim.`;
           const timestamp = new Date().toLocaleTimeString();
 
           setMessages((messages) => [
