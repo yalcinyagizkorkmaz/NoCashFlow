@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatScene: View {
     @ObservedObject var userModel: UserModel
     @State private var messageText = ""
-    @State private var messages: [Message] = [Message(content: "Hello!", isFromUser: false)]
+    @State private var messages: [Message] = [Message(content: "Merhaba! Ben I-Bot. DenizŞikayet platformunun yapay zeka robotuyum. Şikayetinizin en kısa sürede iletilip çözümlenmesi için size ben yardımcı olacağım. Şimdi tüm detaylarıyla şikayetinizi yazabilirsiniz!", isFromUser: false)]
     private var openAIService = OpenAIService(apiKey: "ec442c4a9f864b508f97504f7d7e687b")
 
     // Public initializer
