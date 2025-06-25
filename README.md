@@ -2,7 +2,11 @@
 NoCashFlowRepository
 # DenizŞikayet - Customer Complaint Classification Assistant
 
-![DenizŞikayet Logo/Banner](https://via.placeholder.com/800x200.png?text=Deniz%C5%9Eikayet+Logo)
+### Login Page
+<img width="1287" alt="Ekran Resmi 2025-06-25 14 26 23" src="https://github.com/user-attachments/assets/1032cb84-f01b-4c2c-a791-b0cd41ec198c" />
+
+
+
 *(You can use your project's logo or a relevant image for the visual above.)*
 
 [cite_start]DenizŞikayet is an AI-powered platform designed to automatically collect, analyze, classify, and direct customer complaints to relevant units within the digital banking sector[cite: 35, 36, 37, 38]. [cite_start]It aims to make banks' customer service processes more efficient and effective[cite: 39].
