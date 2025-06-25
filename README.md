@@ -4,10 +4,11 @@ NoCashFlowRepository
 
 ### Login Page
 <img width="1287" alt="Ekran Resmi 2025-06-25 14 26 23" src="https://github.com/user-attachments/assets/1032cb84-f01b-4c2c-a791-b0cd41ec198c" />
-###   Supervisor Page
+###   Admin Login Page
 <img width="1151" alt="Ekran Resmi 2025-06-25 14 27 36" src="https://github.com/user-attachments/assets/44123299-40ee-4ed7-9cc4-fae43e4adb50" />
 ### AI Chatbot Page <img width="1440" alt="Ekran Resmi 2025-06-25 14 27 00" src="https://github.com/user-attachments/assets/6d528755-d5f1-4198-ae71-b93d210f80db" />
-### 
+### User Information<img width="1474" alt="Ekran Resmi 2025-06-25 14 27 54" src="https://github.com/user-attachments/assets/856b3f32-61c5-43f8-b30d-04a0fa4b5fff" />
+###Complaint Detail Page<img width="1474" alt="Ekran Resmi 2025-06-25 14 28 18" src="https://github.com/user-attachments/assets/c2f8446c-5bdb-4c21-ad4d-0151a8b178f8" />
 
 
 
